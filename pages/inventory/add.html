@@ -236,7 +236,7 @@
                     return;
                 }
 
-                if (isNaN(formData.current_stock) || formData.current_stock < 0) {
+                if (isNaN(formData.quantity) || formData.quantity < 0) {
                     showToast('Current stock must be 0 or greater', 'error');
                     return;
                 }
@@ -246,7 +246,7 @@
                     return;
                 }
 
-                if (isNaN(formData.reorder_level) || formData.reorder_level < 0) {
+                if (isNaN(formData.min_threshold) || formData.min_threshold < 0) {
                     showToast('Reorder level must be 0 or greater', 'error');
                     return;
                 }
