@@ -1,5 +1,5 @@
 # Configuration
-config.js
+# config.js - removed from gitignore for deployment
 
 # Environment variables
 .env
