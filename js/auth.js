@@ -95,8 +95,11 @@ export async function signOut() {
     throw new Error(error.message);
   }
   
-  // Redirect to login
-  window.location.href = '/pages/auth/login.html';
+  // Redirect to login using relative path
+  const loginPath = window.location.pathname.includes('/pages/') 
+    ? '../auth/login.html' 
+    : 'pages/auth/login.html';
+  window.location.href = loginPath;
 }
 
 // Reset password
@@ -128,7 +131,11 @@ export async function requireAuth() {
   if (!session) {
     // Store the intended destination
     sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
-    window.location.href = '/pages/auth/login.html';
+    // Use relative path that works from any location
+    const loginPath = window.location.pathname.includes('/pages/') 
+      ? '../auth/login.html' 
+      : 'pages/auth/login.html';
+    window.location.href = loginPath;
     return null;
   }
   

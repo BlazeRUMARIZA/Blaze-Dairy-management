@@ -244,6 +244,20 @@
     <script src="js/user-menu.js"></script>
 
     <!-- Scripts -->
+    <script type="module">
+        import { checkAuth } from './js/auth.js';
+        
+        // Check authentication immediately on page load
+        (async () => {
+            const session = await checkAuth();
+            if (!session) {
+                // No session, redirect to login
+                window.location.href = '/pages/auth/login.html';
+                return;
+            }
+            // User is authenticated, load the rest of the app
+        })();
+    </script>
     <script type="module" src="js/supabase-client.js"></script>
     <script type="module" src="js/auth.js"></script>
     <script type="module" src="js/utils.js"></script>
