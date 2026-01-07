@@ -153,22 +153,10 @@
                             </div>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="storage_location" class="form-label">Storage Location</label>
-                                <input type="text" id="storage_location" class="form-input" placeholder="e.g., Warehouse A, Shelf 3">
-                                <span class="form-error"></span>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="status" class="form-label">Status</label>
-                                <select id="status" class="form-select">
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                    <option value="discontinued">Discontinued</option>
-                                </select>
-                                <span class="form-error"></span>
-                            </div>
+                        <div class="form-group">
+                            <label for="storage_location" class="form-label">Storage Location</label>
+                            <input type="text" id="storage_location" class="form-input" placeholder="e.g., Warehouse A, Shelf 3">
+                            <span class="form-error"></span>
                         </div>
 
                         <div class="form-group">
@@ -239,8 +227,7 @@
                     cost_per_unit: document.getElementById('cost_per_unit').value ? parseFloat(document.getElementById('cost_per_unit').value) : null,
                     supplier_id: document.getElementById('supplier_id').value || null,
                     min_stock_threshold: document.getElementById('reorder_level').value ? parseFloat(document.getElementById('reorder_level').value) : null,
-                    description: document.getElementById('notes').value.trim() || null,
-                    status: document.getElementById('status').value || 'active'
+                    description: document.getElementById('notes').value.trim() || null
                 };
 
                 // Validation

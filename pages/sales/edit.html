@@ -336,8 +336,6 @@
                 submitBtn.innerHTML = '<div class="spinner spinner-sm"></div><span>Updating...</span>';
 
                 try {
-                    const user = await getCurrentUser();
-                    formData.updated_by = user.id;
                     formData.updated_at = new Date().toISOString();
 
                     const { error } = await supabase
