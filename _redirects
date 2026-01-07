@@ -1,6 +1,2 @@
 # Netlify redirects file
-# Redirect root to login for unauthenticated users
-# This is handled by JavaScript in index.html
-
-# Fallback for SPA routing
-/*    /index.html   200
+# No catch-all redirect needed - this is a multi-page app
