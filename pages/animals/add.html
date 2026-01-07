@@ -86,7 +86,7 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="tag" class="form-label form-label-required">Tag/ID</label>
-                                <input type="text" id="tag" class="form-input" required placeholder="Unique identifier (e.g., A001)">
+                                <input type="text" id="tag_id" class="form-input" required placeholder="Unique identifier (e.g., A001)">
                                 <span class="form-error"></span>
                             </div>
 
@@ -244,7 +244,7 @@
 
                 // Get form data
                 const formData = {
-                    tag_id: document.getElementById('tag').value.trim(),
+                    tag_id: document.getElementById('tag_id').value.trim(),
                     name: document.getElementById('name').value.trim() || null,
                     breed: document.getElementById('breed').value.trim(),
                     sex: document.getElementById('sex').value,

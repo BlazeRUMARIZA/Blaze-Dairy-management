@@ -297,7 +297,7 @@
             tbody.innerHTML = pageSales.map(sale => `
                 <tr data-record-id="${sale.id}">
                     <td>${formatDate(sale.sale_date)}</td>
-                    <td><strong>${sale.customer_name || '--'}</strong></td>
+                    <td><strong>${sale.customer_id ? formatDate(sale.next_visit_date) : '--'}</strong></td>
                     <td>${sale.item_name || '--'}</td>
                     <td>${formatNumber(sale.quantity)} ${sale.unit || ''}</td>
                     <td>${formatCurrency(sale.unit_price)}</td>

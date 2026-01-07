@@ -317,11 +317,11 @@
             tbody.innerHTML = pageRecords.map(record => `
                 <tr data-record-id="${record.id}">
                     <td>${formatDate(record.event_date)}</td>
-                    <td><strong>${record.animals?.tag || 'Unknown'}${record.animals?.name ? ' - ' + record.animals.name : ''}</strong></td>
+                    <td><strong>${record.animals?.tag_id || 'Unknown'}${record.animals?.name ? ' - ' + record.animals.name : ''}</strong></td>
                     <td><span class="badge badge-${getEventColor(record.event_type)}">${record.event_type}</span></td>
-                    <td>${record.description || '--'}</td>
+                    <td>${record.medication || '--'}</td>
                     <td>${record.cost ? formatCurrency(record.cost) : '--'}</td>
-                    <td>${record.next_due_date ? formatDate(record.next_due_date) : '--'}</td>
+                    <td>${record.next_visit_date ? formatDate(record.next_visit_date) : '--'}</td>
                     <td>
                         <div class="btn-group">
                             <button class="btn btn-sm btn-outline edit-btn">
