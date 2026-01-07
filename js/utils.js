@@ -105,12 +105,16 @@ export function showAlert(message, type = 'info') {
         '<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'}
     </svg>
     <div style="flex: 1;">${message}</div>
-    <button class="alert-close" onclick="this.parentElement.remove()">
+    <button class="alert-close">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 1.25rem; height: 1.25rem;">
         <path d="M6 18L18 6M6 6l12 12"/>
       </svg>
     </button>
   `;
+  
+  // Add click handler for close button
+  const closeBtn = alert.querySelector('.alert-close');
+  closeBtn.addEventListener('click', () => alert.remove());
   
   container.appendChild(alert);
   
