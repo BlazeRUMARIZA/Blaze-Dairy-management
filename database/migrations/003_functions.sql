@@ -39,17 +39,17 @@ RETURNS TABLE (
 BEGIN
   RETURN QUERY
   SELECT 
-    mp.production_date,
+    d::DATE as production_date,
     COALESCE(SUM(mp.volume_liters), 0) as total_volume,
     COUNT(DISTINCT mp.animal_id)::INTEGER as animal_count
   FROM generate_series(
     CURRENT_DATE - (days - 1), 
     CURRENT_DATE, 
     '1 day'::interval
-  )::DATE AS production_date
-  LEFT JOIN public.milk_productions mp ON mp.production_date = production_date::DATE
-  GROUP BY production_date
-  ORDER BY production_date;
+  ) AS d
+  LEFT JOIN public.milk_productions mp ON mp.production_date = d::DATE
+  GROUP BY d
+  ORDER BY d;
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 

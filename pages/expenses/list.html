@@ -281,9 +281,10 @@
         function renderPage(page) {
             const start = (page - 1) * itemsPerPage;
             const pageExpenses = filteredExpenses.slice(start, start + itemsPerPage);
+            const tbody = document.getElementById('expensesTableBody');
 
-            document.getElementById('expensesTableBody').innerHTML = pageExpenses.map(expense => `
-                <tr>
+            tbody.innerHTML = pageExpenses.map(expense => `
+                <tr data-record-id="${expense.id}">
                     <td>${formatDate(expense.expense_date)}</td>
                     <td><span class="badge badge-${getCategoryColor(expense.category)}">${expense.category || 'other'}</span></td>
                     <td>${expense.description || '--'}</td>
@@ -292,16 +293,23 @@
                     <td>${expense.receipt_number || '--'}</td>
                     <td>
                         <div class="btn-group">
-                            <button class="btn btn-sm btn-ghost" onclick="editExpense('${expense.id}')">
+                            <button class="btn btn-sm btn-outline edit-btn">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                             </button>
-                            <button class="btn btn-sm btn-ghost text-danger" onclick="deleteExpense('${expense.id}')">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            <button class="btn btn-sm btn-danger delete-btn" title="Delete" data-admin-only>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                             </button>
                         </div>
                     </td>
                 </tr>
             `).join('');
+            
+            // Add event delegation for action buttons
+            tbody.querySelectorAll('tr').forEach(row => {
+                const recordId = row.dataset.recordId;
+                row.querySelector('.edit-btn')?.addEventListener('click', () => editExpense(recordId));
+                row.querySelector('.delete-btn')?.addEventListener('click', () => deleteExpense(recordId));
+            });
         }
 
         function getCategoryColor(category) {

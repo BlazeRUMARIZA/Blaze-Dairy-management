@@ -341,7 +341,7 @@
                 const typeBadge = getTypeBadge(feed.type);
 
                 return `
-                    <tr>
+                    <tr data-record-id="${feed.id}">
                         <td><strong>${feed.name || 'Unnamed'}</strong></td>
                         <td>${typeBadge}</td>
                         <td><strong>${formatNumber(stock, 1)} kg</strong></td>
@@ -351,18 +351,18 @@
                         <td>${statusBadge}</td>
                         <td>
                             <div class="btn-group">
-                                <button class="btn btn-sm btn-ghost" onclick="editFeed('${feed.id}')" title="Edit">
+                                <button class="btn btn-sm btn-outline edit-btn" title="Edit">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                                     </svg>
                                 </button>
-                                <button class="btn btn-sm btn-ghost text-danger" onclick="deleteFeed('${feed.id}')" title="Delete">
+                                <button class="btn btn-sm btn-danger delete-btn" title="Delete">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                                     </svg>
                                 </button>
-                                <button class="btn btn-sm btn-ghost" onclick="addFeedLog('${feed.id}')" title="Add Log">
+                                <button class="btn btn-sm btn-outline add-log-btn" title="Add Log">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M12 5v14m-7-7h14"/>
                                     </svg>
@@ -372,6 +372,14 @@
                     </tr>
                 `;
             }).join('');
+            
+            // Add event delegation for action buttons
+            tbody.querySelectorAll('tr').forEach(row => {
+                const recordId = row.dataset.recordId;
+                row.querySelector('.edit-btn')?.addEventListener('click', () => editFeed(recordId));
+                row.querySelector('.delete-btn')?.addEventListener('click', () => deleteFeed(recordId));
+                row.querySelector('.add-log-btn')?.addEventListener('click', () => addFeedLog(recordId));
+            });
         }
 
         function getTypeBadge(type) {

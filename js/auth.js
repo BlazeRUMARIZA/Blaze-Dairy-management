@@ -1,4 +1,4 @@
-// Authentication utilities
+hw// Authentication utilities
 import supabase from './supabase-client.js';
 
 // Check if user is authenticated

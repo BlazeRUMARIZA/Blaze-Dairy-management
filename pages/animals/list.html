@@ -250,7 +250,7 @@
             document.getElementById('tableContainer').style.display = 'block';
 
             tbody.innerHTML = filteredAnimals.map(animal => `
-                <tr>
+                <tr data-animal-id="${animal.id}">
                     <td><strong>${animal.tag_id}</strong></td>
                     <td>${animal.name || '-'}</td>
                     <td>${animal.breed || '-'}</td>
@@ -264,19 +264,27 @@
                     <td>${animal.current_weight_kg || '-'}</td>
                     <td>
                         <div class="table-actions">
-                            <button class="btn btn-sm btn-outline" onclick="window.viewAnimal('${animal.id}')" title="View">
+                            <button class="btn btn-sm btn-outline view-btn" title="View">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                             </button>
-                            <button class="btn btn-sm btn-outline" onclick="window.editAnimal('${animal.id}')" title="Edit">
+                            <button class="btn btn-sm btn-outline edit-btn" title="Edit">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                             </button>
-                            <button class="btn btn-sm btn-danger" onclick="window.deleteAnimal('${animal.id}')" title="Delete" data-admin-only>
+                            <button class="btn btn-sm btn-danger delete-btn" title="Delete" data-admin-only>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                             </button>
                         </div>
                     </td>
                 </tr>
             `).join('');
+            
+            // Add event delegation for action buttons
+            tbody.querySelectorAll('tr').forEach(row => {
+                const animalId = row.dataset.animalId;
+                row.querySelector('.view-btn')?.addEventListener('click', () => window.viewAnimal(animalId));
+                row.querySelector('.edit-btn')?.addEventListener('click', () => window.editAnimal(animalId));
+                row.querySelector('.delete-btn')?.addEventListener('click', () => window.deleteAnimal(animalId));
+            });
         }
 
         function applyFilters() {

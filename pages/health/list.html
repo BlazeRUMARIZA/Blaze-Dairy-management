@@ -211,9 +211,9 @@
             try {
                 const { data, error } = await supabase
                     .from('animals')
-                    .select('id, tag, name')
+                    .select('id, tag_id, name')
                     .eq('status', 'active')
-                    .order('tag');
+                    .order('tag_id');
 
                 if (error) throw error;
                 animals = data || [];
@@ -222,7 +222,7 @@
                 animals.forEach(animal => {
                     const option = document.createElement('option');
                     option.value = animal.id;
-                    option.textContent = `${animal.tag}${animal.name ? ' - ' + animal.name : ''}`;
+                    option.textContent = `${animal.tag_id}${animal.name ? ' - ' + animal.name : ''}`;
                     select.appendChild(option);
                 });
             } catch (error) {
@@ -236,7 +236,7 @@
 
                 const { data, error } = await supabase
                     .from('health_records')
-                    .select('*, animals(tag, name)')
+                    .select('*, animals(tag_id, name)')
                     .order('event_date', { ascending: false });
 
                 if (error) throw error;
@@ -312,9 +312,10 @@
         function renderPage(page) {
             const start = (page - 1) * itemsPerPage;
             const pageRecords = filteredRecords.slice(start, start + itemsPerPage);
+            const tbody = document.getElementById('recordsTableBody');
 
-            document.getElementById('recordsTableBody').innerHTML = pageRecords.map(record => `
-                <tr>
+            tbody.innerHTML = pageRecords.map(record => `
+                <tr data-record-id="${record.id}">
                     <td>${formatDate(record.event_date)}</td>
                     <td><strong>${record.animals?.tag || 'Unknown'}${record.animals?.name ? ' - ' + record.animals.name : ''}</strong></td>
                     <td><span class="badge badge-${getEventColor(record.event_type)}">${record.event_type}</span></td>
@@ -323,16 +324,23 @@
                     <td>${record.next_due_date ? formatDate(record.next_due_date) : '--'}</td>
                     <td>
                         <div class="btn-group">
-                            <button class="btn btn-sm btn-ghost" onclick="editRecord('${record.id}')">
+                            <button class="btn btn-sm btn-outline edit-btn">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                             </button>
-                            <button class="btn btn-sm btn-ghost text-danger" onclick="deleteRecord('${record.id}')">
+                            <button class="btn btn-sm btn-danger delete-btn">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                             </button>
                         </div>
                     </td>
                 </tr>
             `).join('');
+            
+            // Add event delegation for action buttons
+            tbody.querySelectorAll('tr').forEach(row => {
+                const recordId = row.dataset.recordId;
+                row.querySelector('.edit-btn')?.addEventListener('click', () => editRecord(recordId));
+                row.querySelector('.delete-btn')?.addEventListener('click', () => deleteRecord(recordId));
+            });
         }
 
         function getEventColor(type) {
@@ -368,7 +376,7 @@
             document.getElementById('exportBtn').addEventListener('click', () => {
                 const exportData = filteredRecords.map(r => ({
                     Date: r.event_date,
-                    Animal: r.animals ? `${r.animals.tag} - ${r.animals.name || ''}` : '',
+                    Animal: r.animals ? `${r.animals.tag_id} - ${r.animals.name || ''}` : '',
                     Type: r.event_type,
                     Description: r.description || '',
                     Cost: r.cost || '',

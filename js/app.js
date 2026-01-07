@@ -82,45 +82,10 @@ function setupNavigation() {
 // Setup user menu
 function setupUserMenu() {
   const userMenuBtn = document.getElementById('userMenuBtn');
-  const userMenu = document.getElementById('userMenu');
+  // User menu dropdown is handled by user-menu.js (loaded before app.js)
+  // Only handle logout button here
   const logoutBtn = document.getElementById('logoutBtn');
   
-  console.log('Setting up user menu...', { userMenuBtn, userMenu, logoutBtn });
-  
-  if (userMenuBtn && userMenu) {
-    userMenuBtn.addEventListener('click', (e) => {
-      console.log('User menu button clicked');
-      e.stopPropagation();
-      e.preventDefault();
-      const isActive = userMenu.classList.toggle('active');
-      console.log('Menu is now:', isActive ? 'open' : 'closed');
-      // Add active class to button for styling
-      if (isActive) {
-        userMenuBtn.classList.add('active');
-      } else {
-        userMenuBtn.classList.remove('active');
-      }
-    });
-    
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!userMenu.contains(e.target) && !userMenuBtn.contains(e.target)) {
-        userMenu.classList.remove('active');
-        userMenuBtn.classList.remove('active');
-      }
-    });
-    
-    // Prevent menu clicks from closing the menu
-    userMenu.addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
-    
-    console.log('User menu event listeners attached');
-  } else {
-    console.error('User menu elements not found!');
-  }
-  
-  // Logout handler
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
       try {

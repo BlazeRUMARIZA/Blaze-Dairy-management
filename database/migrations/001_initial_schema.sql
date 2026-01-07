@@ -91,6 +91,51 @@ CREATE INDEX idx_milk_production_animal ON public.milk_productions(animal_id);
 COMMENT ON TABLE public.milk_productions IS 'Daily milk production records per animal and shift';
 
 -- =============================================
+-- Suppliers (must come before feeds that reference it)
+-- =============================================
+
+CREATE TABLE public.suppliers (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  contact_name TEXT,
+  phone TEXT,
+  email TEXT,
+  address TEXT,
+  category TEXT, -- feed, equipment, veterinary, etc.
+  notes TEXT,
+  status TEXT DEFAULT 'active',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_suppliers_name ON public.suppliers(name);
+
+COMMENT ON TABLE public.suppliers IS 'Supplier and vendor directory';
+
+-- =============================================
+-- Customers
+-- =============================================
+
+CREATE TABLE public.customers (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  phone TEXT,
+  email TEXT,
+  address TEXT,
+  tier TEXT, -- regular, premium, wholesale
+  credit_limit DECIMAL(10,2) DEFAULT 0,
+  current_balance DECIMAL(10,2) DEFAULT 0,
+  notes TEXT,
+  status TEXT DEFAULT 'active',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_customers_name ON public.customers(name);
+
+COMMENT ON TABLE public.customers IS 'Customer directory for sales';
+
+-- =============================================
 -- Feed Management
 -- =============================================
 
@@ -158,51 +203,6 @@ CREATE INDEX idx_health_records_type ON public.health_records(event_type);
 CREATE INDEX idx_health_next_visit ON public.health_records(next_visit_date) WHERE next_visit_date IS NOT NULL;
 
 COMMENT ON TABLE public.health_records IS 'Animal health events and veterinary records';
-
--- =============================================
--- Suppliers
--- =============================================
-
-CREATE TABLE public.suppliers (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  name TEXT NOT NULL,
-  contact_name TEXT,
-  phone TEXT,
-  email TEXT,
-  address TEXT,
-  category TEXT, -- feed, equipment, veterinary, etc.
-  notes TEXT,
-  status TEXT DEFAULT 'active',
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-CREATE INDEX idx_suppliers_name ON public.suppliers(name);
-
-COMMENT ON TABLE public.suppliers IS 'Supplier and vendor directory';
-
--- =============================================
--- Customers
--- =============================================
-
-CREATE TABLE public.customers (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  name TEXT NOT NULL,
-  phone TEXT,
-  email TEXT,
-  address TEXT,
-  tier TEXT, -- regular, premium, wholesale
-  credit_limit DECIMAL(10,2) DEFAULT 0,
-  current_balance DECIMAL(10,2) DEFAULT 0,
-  notes TEXT,
-  status TEXT DEFAULT 'active',
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-CREATE INDEX idx_customers_name ON public.customers(name);
-
-COMMENT ON TABLE public.customers IS 'Customer directory for sales';
 
 -- =============================================
 -- Sales

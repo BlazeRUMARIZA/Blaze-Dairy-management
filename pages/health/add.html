@@ -168,9 +168,9 @@
             try {
                 const { data, error } = await supabase
                     .from('animals')
-                    .select('id, tag, name')
+                    .select('id, tag_id, name')
                     .eq('status', 'active')
-                    .order('tag');
+                    .order('tag_id');
 
                 if (error) throw error;
 
@@ -178,7 +178,7 @@
                 (data || []).forEach(animal => {
                     const option = document.createElement('option');
                     option.value = animal.id;
-                    option.textContent = `${animal.tag}${animal.name ? ' - ' + animal.name : ''}`;
+                    option.textContent = `${animal.tag_id}${animal.name ? ' - ' + animal.name : ''}`;
                     select.appendChild(option);
                 });
             } catch (error) {
@@ -197,6 +197,8 @@
 
             try {
                 const formData = new FormData(e.target);
+                const user = await getCurrentUser();
+                
                 const data = {
                     event_date: formData.get('event_date'),
                     animal_id: formData.get('animal_id'),
@@ -206,7 +208,8 @@
                     veterinarian: formData.get('veterinarian') || null,
                     treatment: formData.get('treatment') || null,
                     next_due_date: formData.get('next_due_date') || null,
-                    notes: formData.get('notes') || null
+                    notes: formData.get('notes') || null,
+                    recorded_by: user.id
                 };
 
                 const { error } = await supabase

@@ -185,9 +185,9 @@
             try {
                 const { data, error } = await supabase
                     .from('animals')
-                    .select('id, tag, name')
+                    .select('id, tag_id, name')
                     .eq('status', 'active')
-                    .order('tag');
+                    .order('tag_id');
 
                 if (error) throw error;
 
@@ -195,7 +195,7 @@
                 data.forEach(animal => {
                     const option = document.createElement('option');
                     option.value = animal.id;
-                    option.textContent = `${animal.tag}${animal.name ? ' - ' + animal.name : ''}`;
+                    option.textContent = `${animal.tag_id}${animal.name ? ' - ' + animal.name : ''}`;
                     select.appendChild(option);
                 });
             } catch (error) {

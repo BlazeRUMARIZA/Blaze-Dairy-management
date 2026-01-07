@@ -24,13 +24,13 @@ ALTER TABLE public.attachments ENABLE ROW LEVEL SECURITY;
 -- =============================================
 
 -- Get current user's role
-CREATE OR REPLACE FUNCTION auth.user_role()
+CREATE OR REPLACE FUNCTION public.user_role()
 RETURNS user_role AS $$
   SELECT role FROM public.users WHERE id = auth.uid();
 $$ LANGUAGE sql STABLE SECURITY DEFINER;
 
 -- Check if user is admin
-CREATE OR REPLACE FUNCTION auth.is_admin()
+CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS BOOLEAN AS $$
   SELECT EXISTS (
     SELECT 1 FROM public.users 
@@ -50,7 +50,7 @@ CREATE POLICY "Users can view own profile"
 -- Admins can view all users
 CREATE POLICY "Admins can view all users"
   ON public.users FOR SELECT
-  USING (auth.is_admin());
+  USING (public.is_admin());
 
 -- Users can update their own profile
 CREATE POLICY "Users can update own profile"
@@ -60,11 +60,11 @@ CREATE POLICY "Users can update own profile"
 -- Only admins can insert/delete users
 CREATE POLICY "Admins can insert users"
   ON public.users FOR INSERT
-  WITH CHECK (auth.is_admin());
+  WITH CHECK (public.is_admin());
 
 CREATE POLICY "Admins can delete users"
   ON public.users FOR DELETE
-  USING (auth.is_admin());
+  USING (public.is_admin());
 
 -- =============================================
 -- Animals Table Policies
@@ -88,7 +88,7 @@ CREATE POLICY "Users can update animals"
 -- Only admins can delete animals
 CREATE POLICY "Admins can delete animals"
   ON public.animals FOR DELETE
-  USING (auth.is_admin());
+  USING (public.is_admin());
 
 -- =============================================
 -- Milk Productions Policies
@@ -108,7 +108,7 @@ CREATE POLICY "Users can update milk productions"
 
 CREATE POLICY "Admins can delete milk productions"
   ON public.milk_productions FOR DELETE
-  USING (auth.is_admin());
+  USING (public.is_admin());
 
 -- =============================================
 -- Feeds Policies
@@ -128,7 +128,7 @@ CREATE POLICY "Users can update feeds"
 
 CREATE POLICY "Admins can delete feeds"
   ON public.feeds FOR DELETE
-  USING (auth.is_admin());
+  USING (public.is_admin());
 
 -- =============================================
 -- Feed Logs Policies
@@ -148,7 +148,7 @@ CREATE POLICY "Users can update feed logs"
 
 CREATE POLICY "Admins can delete feed logs"
   ON public.feed_logs FOR DELETE
-  USING (auth.is_admin());
+  USING (public.is_admin());
 
 -- =============================================
 -- Health Records Policies
@@ -168,7 +168,7 @@ CREATE POLICY "Users can update health records"
 
 CREATE POLICY "Admins can delete health records"
   ON public.health_records FOR DELETE
-  USING (auth.is_admin());
+  USING (public.is_admin());
 
 -- =============================================
 -- Suppliers Policies
@@ -188,7 +188,7 @@ CREATE POLICY "Users can update suppliers"
 
 CREATE POLICY "Admins can delete suppliers"
   ON public.suppliers FOR DELETE
-  USING (auth.is_admin());
+  USING (public.is_admin());
 
 -- =============================================
 -- Customers Policies
@@ -208,7 +208,7 @@ CREATE POLICY "Users can update customers"
 
 CREATE POLICY "Admins can delete customers"
   ON public.customers FOR DELETE
-  USING (auth.is_admin());
+  USING (public.is_admin());
 
 -- =============================================
 -- Sales Policies
@@ -228,7 +228,7 @@ CREATE POLICY "Users can update sales"
 
 CREATE POLICY "Admins can delete sales"
   ON public.sales FOR DELETE
-  USING (auth.is_admin());
+  USING (public.is_admin());
 
 -- =============================================
 -- Expenses Policies
@@ -249,7 +249,7 @@ CREATE POLICY "Users can update expenses"
 
 CREATE POLICY "Admins can delete expenses"
   ON public.expenses FOR DELETE
-  USING (auth.is_admin());
+  USING (public.is_admin());
 
 -- =============================================
 -- Inventory Policies
@@ -269,7 +269,7 @@ CREATE POLICY "Users can update inventory"
 
 CREATE POLICY "Admins can delete inventory"
   ON public.inventory_items FOR DELETE
-  USING (auth.is_admin());
+  USING (public.is_admin());
 
 -- =============================================
 -- Tasks Policies
@@ -279,7 +279,7 @@ CREATE POLICY "Admins can delete inventory"
 CREATE POLICY "Users can view relevant tasks"
   ON public.tasks FOR SELECT
   USING (
-    auth.is_admin() OR 
+    public.is_admin() OR 
     assignee_id = auth.uid() OR 
     created_by = auth.uid()
   );
@@ -291,14 +291,14 @@ CREATE POLICY "Users can create tasks"
 CREATE POLICY "Users can update assigned tasks"
   ON public.tasks FOR UPDATE
   USING (
-    auth.is_admin() OR 
+    public.is_admin() OR 
     assignee_id = auth.uid() OR 
     created_by = auth.uid()
   );
 
 CREATE POLICY "Admins can delete tasks"
   ON public.tasks FOR DELETE
-  USING (auth.is_admin());
+  USING (public.is_admin());
 
 -- =============================================
 -- Activity Logs Policies
@@ -308,7 +308,7 @@ CREATE POLICY "Admins can delete tasks"
 CREATE POLICY "Users can view relevant activity logs"
   ON public.activity_logs FOR SELECT
   USING (
-    auth.is_admin() OR 
+    public.is_admin() OR 
     user_id = auth.uid()
   );
 
@@ -320,7 +320,7 @@ CREATE POLICY "Users can create activity logs"
 -- Only admins can delete logs
 CREATE POLICY "Admins can delete activity logs"
   ON public.activity_logs FOR DELETE
-  USING (auth.is_admin());
+  USING (public.is_admin());
 
 -- =============================================
 -- Attachments Policies
@@ -337,7 +337,7 @@ CREATE POLICY "Users can upload attachments"
 CREATE POLICY "Users can delete own attachments"
   ON public.attachments FOR DELETE
   USING (
-    auth.is_admin() OR 
+    public.is_admin() OR 
     uploaded_by = auth.uid()
   );
 

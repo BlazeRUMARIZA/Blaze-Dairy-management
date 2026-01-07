@@ -244,7 +244,7 @@
 
                 // Get form data
                 const formData = {
-                    tag: document.getElementById('tag').value.trim(),
+                    tag_id: document.getElementById('tag').value.trim(),
                     name: document.getElementById('name').value.trim() || null,
                     breed: document.getElementById('breed').value.trim(),
                     sex: document.getElementById('sex').value,
@@ -258,7 +258,7 @@
                 };
 
                 // Validation
-                if (!formData.tag) {
+                if (!formData.tag_id) {
                     showToast('Tag/ID is required', 'error');
                     return;
                 }

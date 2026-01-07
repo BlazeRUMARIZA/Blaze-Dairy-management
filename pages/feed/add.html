@@ -244,9 +244,6 @@
                 submitBtn.innerHTML = '<div class="spinner spinner-sm"></div><span>Saving...</span>';
 
                 try {
-                    const user = await getCurrentUser();
-                    formData.created_by = user.id;
-
                     const { error } = await supabase
                         .from('feeds')
                         .insert([formData]);

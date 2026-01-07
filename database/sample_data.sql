@@ -1,14 +1,56 @@
 -- Sample data for testing the Blaze Dairy Management system
 
--- Insert test users (assumes auth.users already exists via Supabase Auth)
--- Note: You'll need to create these users through Supabase Auth UI or API first
--- Then insert corresponding profiles:
+-- =============================================
+-- IMPORTANT: Create Users First!
+-- =============================================
+-- Before running this script, you MUST create users in Supabase Auth:
+-- 1. Go to Supabase Dashboard → Authentication → Users
+-- 2. Click "Add user" and create:
+--    - Email: admin@blaze.com, Password: your-password
+--    - Email: staff@blaze.com, Password: your-password
+-- 3. After creating auth users, run this query to get their IDs:
+--    SELECT id, email FROM auth.users;
+-- 4. Then insert into public.users using those IDs:
+--
+-- INSERT INTO public.users (id, email, role, full_name, phone, status)
+-- SELECT id, email, 'admin', 'Admin User', '+1234567890', 'active'
+-- FROM auth.users WHERE email = 'admin@blaze.com'
+-- UNION ALL
+-- SELECT id, email, 'staff', 'Staff User', '+1234567891', 'active'
+-- FROM auth.users WHERE email = 'staff@blaze.com';
+--
+-- =============================================
 
--- Insert sample user profiles (adjust IDs to match your auth.users)
-INSERT INTO public.users (id, email, role, full_name, phone, status) VALUES
-('11111111-1111-1111-1111-111111111111', 'admin@blaze.com', 'admin', 'Admin User', '+1234567890', 'active'),
-('22222222-2222-2222-2222-222222222222', 'staff@blaze.com', 'staff', 'Staff User', '+1234567891', 'active')
+-- Automatically insert public.users records for existing auth.users
+INSERT INTO public.users (id, email, role, full_name, phone, status)
+SELECT 
+  au.id,
+  au.email,
+  CASE 
+    WHEN au.email LIKE '%admin%' THEN 'admin'::user_role
+    ELSE 'staff'::user_role
+  END as role,
+  COALESCE(au.raw_user_meta_data->>'full_name', split_part(au.email, '@', 1)) as full_name,
+  COALESCE(au.raw_user_meta_data->>'phone', '+1234567890') as phone,
+  'active' as status
+FROM auth.users au
+WHERE NOT EXISTS (SELECT 1 FROM public.users pu WHERE pu.id = au.id)
 ON CONFLICT (id) DO NOTHING;
+
+-- Verify users were created
+DO $$
+DECLARE
+  user_count INTEGER;
+BEGIN
+  SELECT COUNT(*) INTO user_count FROM public.users;
+  IF user_count = 0 THEN
+    RAISE WARNING 'No users found in public.users! Please create users in Supabase Auth first.';
+    RAISE WARNING 'Go to: Supabase Dashboard → Authentication → Users → Add user';
+    RAISE WARNING 'Then re-run this script.';
+  ELSE
+    RAISE NOTICE '% user(s) found in public.users', user_count;
+  END IF;
+END $$;
 
 -- Insert sample animals
 INSERT INTO public.animals (tag_id, name, breed, sex, date_of_birth, status, acquisition_date, acquisition_type, current_weight_kg, notes) VALUES
@@ -24,7 +66,7 @@ INSERT INTO public.milk_productions (animal_id, production_date, shift, volume_l
 SELECT 
   a.id,
   CURRENT_DATE - (n || ' days')::interval,
-  CASE WHEN random() < 0.5 THEN 'morning' ELSE 'evening' END,
+  CASE WHEN random() < 0.5 THEN 'morning'::shift_type ELSE 'evening'::shift_type END,
   20 + (random() * 10),
   3.5 + (random() * 1.5),
   8.5 + (random() * 0.5)
@@ -101,7 +143,7 @@ INSERT INTO public.health_records (animal_id, event_date, event_type, diagnosis,
 SELECT 
   a.id,
   CURRENT_DATE - ((random() * 90)::int || ' days')::interval,
-  (ARRAY['vaccination', 'checkup', 'treatment'])[floor(random() * 3 + 1)],
+  (ARRAY['vaccination'::health_event_type, 'checkup'::health_event_type, 'treatment'::health_event_type])[floor(random() * 3 + 1)],
   'Routine health check',
   'Preventive care',
   CASE WHEN random() < 0.5 THEN 'Vaccine XYZ' ELSE 'Antibiotic ABC' END,
@@ -125,7 +167,7 @@ SELECT
   'Routine health inspection for ' || a.name,
   CURRENT_DATE + ((random() * 14)::int || ' days')::interval,
   (ARRAY['low', 'medium', 'high'])[floor(random() * 3 + 1)],
-  (ARRAY['pending', 'in_progress'])[floor(random() * 2 + 1)]
+  (ARRAY['pending'::task_status, 'in_progress'::task_status])[floor(random() * 2 + 1)]
 FROM public.animals a
 WHERE a.status = 'active'
 LIMIT 10;
