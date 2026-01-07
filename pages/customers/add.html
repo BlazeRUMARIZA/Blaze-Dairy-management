@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Record Production - Blaze Dairy Management</title>
+    <title>Add Customer - Blaze Dairy Management</title>
     <link rel="stylesheet" href="../../css/main.css">
     <link rel="stylesheet" href="../../css/components.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -27,7 +27,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.84 4.84l-4.24 4.24M23 12h-6m-6 0H1"/></svg>
                     Livestock
                 </a>
-                <a href="list.html" class="nav-link active">
+                <a href="../production/list.html" class="nav-link">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 7h20M2 17h20"/></svg>
                     Production
                 </a>
@@ -43,17 +43,13 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                     Sales
                 </a>
-                <a href="../expenses/list.html" class="nav-link">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                    Expenses
-                </a>
-                <a href="../customers/list.html" class="nav-link">
+                <a href="list.html" class="nav-link active">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87m-4-12a4 4 0 0 1 0 7.75"/></svg>
                     Customers
                 </a>
-                <a href="../users/list.html" class="nav-link">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    Users
+                <a href="../expenses/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Expenses
                 </a>
                 <a href="../inventory/list.html" class="nav-link">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
@@ -83,91 +79,87 @@
         <div class="container" style="max-width: 800px;">
             <header class="page-header">
                 <div>
-                    <h1 class="page-title">Record Production</h1>
-                    <p class="page-subtitle">Add new milk production record</p>
+                    <h1 class="page-title">Add Customer</h1>
+                    <p class="page-subtitle">Register new customer</p>
                 </div>
             </header>
 
             <div class="card">
                 <div class="card-body">
-                    <form id="productionForm">
+                    <form id="customerForm">
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="production_date" class="form-label form-label-required">Production Date</label>
-                                <input type="date" id="production_date" class="form-input" required>
+                                <label for="name" class="form-label form-label-required">Name</label>
+                                <input type="text" id="name" class="form-input" required placeholder="Customer name">
                                 <span class="form-error"></span>
                             </div>
 
                             <div class="form-group">
-                                <label for="shift" class="form-label form-label-required">Shift</label>
-                                <select id="shift" class="form-select" required>
-                                    <option value="">Select Shift</option>
-                                    <option value="morning">Morning</option>
-                                    <option value="evening">Evening</option>
-                                    <option value="night">Night</option>
+                                <label for="phone" class="form-label">Phone</label>
+                                <input type="tel" id="phone" class="form-input" placeholder="Phone number">
+                                <span class="form-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" id="email" class="form-input" placeholder="customer@example.com">
+                                <span class="form-error"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="tier" class="form-label">Tier</label>
+                                <select id="tier" class="form-select">
+                                    <option value="regular" selected>Regular</option>
+                                    <option value="premium">Premium</option>
+                                    <option value="wholesale">Wholesale</option>
                                 </select>
                                 <span class="form-error"></span>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="animal_id" class="form-label form-label-required">Animal</label>
-                            <select id="animal_id" class="form-select" required>
-                                <option value="">Select Animal</option>
-                            </select>
+                            <label for="address" class="form-label">Address</label>
+                            <textarea id="address" class="form-textarea" rows="2" placeholder="Customer address"></textarea>
                             <span class="form-error"></span>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="quantity" class="form-label form-label-required">Quantity (Liters)</label>
-                                <input type="number" id="quantity" class="form-input" step="0.1" min="0" required placeholder="0.0">
+                                <label for="credit_limit" class="form-label">Credit Limit</label>
+                                <input type="number" id="credit_limit" class="form-input" step="0.01" min="0" placeholder="0.00">
                                 <span class="form-error"></span>
                             </div>
 
                             <div class="form-group">
-                                <label for="fat_percentage" class="form-label">Fat Percentage (%)</label>
-                                <input type="number" id="fat_percentage" class="form-input" step="0.1" min="0" max="100" placeholder="0.0">
+                                <label for="current_balance" class="form-label">Current Balance</label>
+                                <input type="number" id="current_balance" class="form-input" step="0.01" placeholder="0.00">
                                 <span class="form-error"></span>
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="snf_percentage" class="form-label">SNF Percentage (%)</label>
-                                <input type="number" id="snf_percentage" class="form-input" step="0.1" min="0" max="100" placeholder="0.0">
+                                <label for="status" class="form-label">Status</label>
+                                <select id="status" class="form-select">
+                                    <option value="active" selected>Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
                                 <span class="form-error"></span>
                             </div>
-
-                            <div class="form-group">
-                                <label for="temperature" class="form-label">Temperature (°C)</label>
-                                <input type="number" id="temperature" class="form-input" step="0.1" placeholder="0.0">
-                                <span class="form-error"></span>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="quality_grade" class="form-label">Quality Grade</label>
-                            <select id="quality_grade" class="form-select">
-                                <option value="">Select Grade</option>
-                                <option value="A">Grade A (Premium)</option>
-                                <option value="B">Grade B (Standard)</option>
-                                <option value="C">Grade C (Below Standard)</option>
-                                <option value="rejected">Rejected</option>
-                            </select>
-                            <span class="form-error"></span>
                         </div>
 
                         <div class="form-group">
                             <label for="notes" class="form-label">Notes</label>
-                            <textarea id="notes" class="form-textarea" rows="3" placeholder="Any additional notes..."></textarea>
+                            <textarea id="notes" class="form-textarea" rows="3" placeholder="Any additional information..."></textarea>
                             <span class="form-error"></span>
                         </div>
 
                         <div class="form-actions">
                             <a href="list.html" class="btn btn-secondary">Cancel</a>
                             <button type="submit" class="btn btn-primary" id="submitBtn">
-                                <span>Save Production Record</span>
+                                <span>Add Customer</span>
                             </button>
                         </div>
                     </form>
@@ -179,43 +171,16 @@
     <script type="module">
         import { supabase } from '../../js/supabase-client.js';
         import { requireAuth, getCurrentUser } from '../../js/auth.js';
-        import { showToast } from '../../js/utils.js';
+        import { showToast, handleError } from '../../js/utils.js';
 
         await requireAuth();
 
-        async function init() {
-            // Set today's date as default
-            document.getElementById('production_date').valueAsDate = new Date();
-            
-            await loadAnimals();
+        function init() {
             setupForm();
         }
 
-        async function loadAnimals() {
-            try {
-                const { data, error } = await supabase
-                    .from('animals')
-                    .select('id, tag_id, name')
-                    .eq('status', 'active')
-                    .order('tag_id');
-
-                if (error) throw error;
-
-                const select = document.getElementById('animal_id');
-                data.forEach(animal => {
-                    const option = document.createElement('option');
-                    option.value = animal.id;
-                    option.textContent = `${animal.tag_id}${animal.name ? ' - ' + animal.name : ''}`;
-                    select.appendChild(option);
-                });
-            } catch (error) {
-                console.error('Error loading animals:', error);
-                showToast('Failed to load animals', 'error');
-            }
-        }
-
         function setupForm() {
-            const form = document.getElementById('productionForm');
+            const form = document.getElementById('customerForm');
             const submitBtn = document.getElementById('submitBtn');
 
             form.addEventListener('submit', async (e) => {
@@ -223,35 +188,35 @@
 
                 // Get form data
                 const formData = {
-                    production_date: document.getElementById('production_date').value,
-                    shift: document.getElementById('shift').value,
-                    animal_id: document.getElementById('animal_id').value,
-                    volume_liters: parseFloat(document.getElementById('quantity').value),
-                    fat_percentage: document.getElementById('fat_percentage').value ? parseFloat(document.getElementById('fat_percentage').value) : null,
-                    snf_percentage: document.getElementById('snf_percentage').value ? parseFloat(document.getElementById('snf_percentage').value) : null,
-                    temperature_celsius: document.getElementById('temperature').value ? parseFloat(document.getElementById('temperature').value) : null,
-                    quality_grade: document.getElementById('quality_grade').value || null,
-                    notes: document.getElementById('notes').value.trim() || null
+                    name: document.getElementById('name').value.trim(),
+                    phone: document.getElementById('phone').value.trim() || null,
+                    email: document.getElementById('email').value.trim() || null,
+                    address: document.getElementById('address').value.trim() || null,
+                    tier: document.getElementById('tier').value,
+                    credit_limit: document.getElementById('credit_limit').value ? parseFloat(document.getElementById('credit_limit').value) : 0,
+                    current_balance: document.getElementById('current_balance').value ? parseFloat(document.getElementById('current_balance').value) : 0,
+                    notes: document.getElementById('notes').value.trim() || null,
+                    status: document.getElementById('status').value
                 };
 
                 // Validation
-                if (!formData.production_date) {
-                    showToast('Production date is required', 'error');
+                if (!formData.name) {
+                    showToast('Name is required', 'error');
                     return;
                 }
 
-                if (!formData.shift) {
-                    showToast('Shift is required', 'error');
-                    return;
+                // Email validation
+                if (formData.email) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(formData.email)) {
+                        showToast('Please enter a valid email address', 'error');
+                        return;
+                    }
                 }
 
-                if (!formData.animal_id) {
-                    showToast('Please select an animal', 'error');
-                    return;
-                }
-
-                if (!formData.quantity || formData.quantity <= 0) {
-                    showToast('Quantity must be greater than 0', 'error');
+                // Credit limit validation
+                if (formData.credit_limit < 0) {
+                    showToast('Credit limit cannot be negative', 'error');
                     return;
                 }
 
@@ -261,15 +226,17 @@
 
                 try {
                     const user = await getCurrentUser();
-                    formData.recorded_by = user.id;
+                    formData.created_by = user.id;
 
                     const { error } = await supabase
-                        .from('milk_productions')
+                        .from('customers')
                         .insert([formData]);
 
-                    if (error) throw error;
+                    if (error) {
+                        throw error;
+                    }
 
-                    showToast('Production record saved successfully', 'success');
+                    showToast('Customer added successfully', 'success');
                     
                     // Redirect after short delay
                     setTimeout(() => {
@@ -277,10 +244,10 @@
                     }, 1000);
 
                 } catch (error) {
-                    console.error('Error saving production:', error);
-                    showToast(error.message || 'Failed to save production record', 'error');
+                    console.error('Error saving customer:', error);
+                    handleError(error);
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<span>Save Production Record</span>';
+                    submitBtn.innerHTML = '<span>Add Customer</span>';
                 }
             });
         }

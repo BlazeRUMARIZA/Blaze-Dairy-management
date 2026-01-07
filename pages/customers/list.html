@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Livestock - Blaze Dairy Management</title>
+    <title>Customers - Blaze Dairy Management</title>
     <link rel="stylesheet" href="../../css/main.css">
     <link rel="stylesheet" href="../../css/components.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <!-- Navigation (same as index.html) -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <div class="nav-brand">
@@ -26,7 +25,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
                     Dashboard
                 </a>
-                <a href="list.html" class="nav-link active">
+                <a href="../animals/list.html" class="nav-link">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.84 4.84l-4.24 4.24M23 12h-6m-6 0H1"/></svg>
                     Livestock
                 </a>
@@ -50,21 +49,13 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                     Expenses
                 </a>
-                <a href="../customers/list.html" class="nav-link">
+                <a href="list.html" class="nav-link active">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87m-4-12a4 4 0 0 1 0 7.75"/></svg>
                     Customers
                 </a>
                 <a href="../users/list.html" class="nav-link">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     Users
-                </a>
-                <a href="../inventory/list.html" class="nav-link">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-                    Inventory
-                </a>
-                <a href="../tasks/list.html" class="nav-link">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-                    Tasks
                 </a>
             </div>
             <div class="nav-user">
@@ -86,8 +77,8 @@
         <div class="container">
             <header class="page-header">
                 <div>
-                    <h1 class="page-title">Livestock Management</h1>
-                    <p class="page-subtitle">Manage your animal registry and tracking</p>
+                    <h1 class="page-title">Customer Management</h1>
+                    <p class="page-subtitle">Manage customer directory and accounts</p>
                 </div>
                 <div class="page-actions">
                     <button class="btn btn-secondary" id="exportBtn">
@@ -96,7 +87,7 @@
                     </button>
                     <a href="add.html" class="btn btn-primary">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14m-7-7h14"/></svg>
-                        Add Animal
+                        Add Customer
                     </a>
                 </div>
             </header>
@@ -109,18 +100,18 @@
                             <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                             </svg>
-                            <input type="text" class="form-input" id="searchInput" placeholder="Search by tag, name, breed...">
+                            <input type="text" class="form-input" id="searchInput" placeholder="Search by name, phone, email...">
                         </div>
+                        <select class="form-select" id="tierFilter">
+                            <option value="">All Tiers</option>
+                            <option value="regular">Regular</option>
+                            <option value="premium">Premium</option>
+                            <option value="wholesale">Wholesale</option>
+                        </select>
                         <select class="form-select" id="statusFilter">
                             <option value="">All Status</option>
                             <option value="active">Active</option>
-                            <option value="sold">Sold</option>
-                            <option value="deceased">Deceased</option>
-                        </select>
-                        <select class="form-select" id="sexFilter">
-                            <option value="">All Sex</option>
-                            <option value="female">Female</option>
-                            <option value="male">Male</option>
+                            <option value="inactive">Inactive</option>
                         </select>
                         <button class="btn btn-outline" id="clearFilters">Clear</button>
                     </div>
@@ -131,7 +122,7 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-lg); margin-bottom: var(--spacing-xl);">
                 <div class="card">
                     <div class="card-body">
-                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: var(--spacing-xs);">Total Animals</p>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: var(--spacing-xs);">Total Customers</p>
                         <p style="font-size: 2rem; font-weight: 700; color: var(--text-primary);" id="totalCount">0</p>
                     </div>
                 </div>
@@ -143,41 +134,35 @@
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: var(--spacing-xs);">Female</p>
-                        <p style="font-size: 2rem; font-weight: 700; color: var(--primary);" id="femaleCount">0</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: var(--spacing-xs);">Male</p>
-                        <p style="font-size: 2rem; font-weight: 700; color: var(--secondary);" id="maleCount">0</p>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: var(--spacing-xs);">Total Balance</p>
+                        <p style="font-size: 2rem; font-weight: 700; color: var(--primary);" id="totalBalance">$0</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Animals Table -->
+            <!-- Customers Table -->
             <div class="card">
                 <div class="card-body" style="padding: 0;">
                     <div id="loadingState" style="padding: var(--spacing-2xl); text-align: center;">
                         <div class="spinner"></div>
-                        <p style="margin-top: var(--spacing-md); color: var(--text-secondary);">Loading animals...</p>
+                        <p style="margin-top: var(--spacing-md); color: var(--text-secondary);">Loading customers...</p>
                     </div>
                     <div id="tableContainer" style="display: none;">
                         <div class="table-container">
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Tag ID</th>
                                         <th>Name</th>
-                                        <th>Breed</th>
-                                        <th>Sex</th>
-                                        <th>Age</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Tier</th>
+                                        <th>Balance</th>
+                                        <th>Credit Limit</th>
                                         <th>Status</th>
-                                        <th>Weight (kg)</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id="animalsTableBody">
+                                <tbody id="customersTableBody">
                                 </tbody>
                             </table>
                         </div>
@@ -185,70 +170,65 @@
                     <div id="emptyState" style="display: none;">
                         <div class="empty-state">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.84 4.84l-4.24 4.24M23 12h-6m-6 0H1"/>
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87m-4-12a4 4 0 0 1 0 7.75"/>
                             </svg>
-                            <p>No animals found</p>
-                            <a href="add.html" class="btn btn-primary" style="margin-top: var(--spacing-md);">Add First Animal</a>
+                            <p>No customers found</p>
+                            <a href="add.html" class="btn btn-primary" style="margin-top: var(--spacing-md);">Add First Customer</a>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Pagination -->
-            <div id="paginationContainer"></div>
         </div>
     </main>
 
     <script type="module">
         import supabase from '../../js/supabase-client.js';
         import { requireAuth } from '../../js/auth.js';
-        import { formatDate, calculateAge, showToast, handleError, debounce, downloadCSV, confirm } from '../../js/utils.js';
-        import { Pagination } from '../../js/app.js';
+        import { formatDate, showToast, handleError, debounce, downloadCSV, confirm } from '../../js/utils.js';
 
-        let animals = [];
-        let filteredAnimals = [];
-        let pagination;
+        let customers = [];
+        let filteredCustomers = [];
 
         async function init() {
             await requireAuth();
-            await loadAnimals();
+            await loadCustomers();
             setupEventListeners();
         }
 
-        async function loadAnimals() {
+        async function loadCustomers() {
             try {
                 document.getElementById('loadingState').style.display = 'block';
                 document.getElementById('tableContainer').style.display = 'none';
                 document.getElementById('emptyState').style.display = 'none';
 
                 const { data, error } = await supabase
-                    .from('animals')
+                    .from('customers')
                     .select('*')
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;
 
-                animals = data || [];
-                filteredAnimals = animals;
+                customers = data || [];
+                filteredCustomers = customers;
                 updateStats();
                 renderTable();
 
             } catch (error) {
-                handleError(error, 'Failed to load animals');
+                handleError(error, 'Failed to load customers');
             }
         }
 
         function updateStats() {
-            document.getElementById('totalCount').textContent = animals.length;
-            document.getElementById('activeCount').textContent = animals.filter(a => a.status === 'active').length;
-            document.getElementById('femaleCount').textContent = animals.filter(a => a.sex === 'female').length;
-            document.getElementById('maleCount').textContent = animals.filter(a => a.sex === 'male').length;
+            document.getElementById('totalCount').textContent = customers.length;
+            document.getElementById('activeCount').textContent = customers.filter(c => c.status === 'active').length;
+            const totalBalance = customers.reduce((sum, c) => sum + (parseFloat(c.current_balance) || 0), 0);
+            document.getElementById('totalBalance').textContent = `$${totalBalance.toFixed(2)}`;
         }
 
         function renderTable() {
-            const tbody = document.getElementById('animalsTableBody');
+            const tbody = document.getElementById('customersTableBody');
             
-            if (filteredAnimals.length === 0) {
+            if (filteredCustomers.length === 0) {
                 document.getElementById('loadingState').style.display = 'none';
                 document.getElementById('emptyState').style.display = 'block';
                 return;
@@ -257,24 +237,25 @@
             document.getElementById('loadingState').style.display = 'none';
             document.getElementById('tableContainer').style.display = 'block';
 
-            tbody.innerHTML = filteredAnimals.map(animal => `
-                <tr data-animal-id="${animal.id}">
-                    <td><strong>${animal.tag_id}</strong></td>
-                    <td>${animal.name || '-'}</td>
-                    <td>${animal.breed || '-'}</td>
-                    <td>${animal.sex === 'female' ? '♀ Female' : '♂ Male'}</td>
-                    <td>${animal.date_of_birth ? calculateAge(animal.date_of_birth) + ' years' : '-'}</td>
+            tbody.innerHTML = filteredCustomers.map(customer => `
+                <tr data-customer-id="${customer.id}">
+                    <td><strong>${customer.name}</strong></td>
+                    <td>${customer.phone || '-'}</td>
+                    <td>${customer.email || '-'}</td>
                     <td>
-                        <span class="badge badge-${animal.status === 'active' ? 'success' : animal.status === 'sold' ? 'warning' : 'secondary'}">
-                            ${animal.status}
+                        <span class="badge badge-${customer.tier === 'premium' ? 'primary' : customer.tier === 'wholesale' ? 'success' : 'secondary'}">
+                            ${customer.tier || 'regular'}
                         </span>
                     </td>
-                    <td>${animal.current_weight_kg || '-'}</td>
+                    <td>$${(parseFloat(customer.current_balance) || 0).toFixed(2)}</td>
+                    <td>$${(parseFloat(customer.credit_limit) || 0).toFixed(2)}</td>
+                    <td>
+                        <span class="badge badge-${customer.status === 'active' ? 'success' : 'secondary'}">
+                            ${customer.status || 'active'}
+                        </span>
+                    </td>
                     <td>
                         <div class="table-actions">
-                            <button class="btn btn-sm btn-outline view-btn" title="View">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                            </button>
                             <button class="btn btn-sm btn-outline edit-btn" title="Edit">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                             </button>
@@ -286,101 +267,89 @@
                 </tr>
             `).join('');
             
-            // Add event delegation for action buttons
             tbody.querySelectorAll('tr').forEach(row => {
-                const animalId = row.dataset.animalId;
-                row.querySelector('.view-btn')?.addEventListener('click', () => window.viewAnimal(animalId));
-                row.querySelector('.edit-btn')?.addEventListener('click', () => window.editAnimal(animalId));
-                row.querySelector('.delete-btn')?.addEventListener('click', () => window.deleteAnimal(animalId));
+                const customerId = row.dataset.customerId;
+                row.querySelector('.edit-btn')?.addEventListener('click', () => window.editCustomer(customerId));
+                row.querySelector('.delete-btn')?.addEventListener('click', () => window.deleteCustomer(customerId));
             });
         }
 
         function applyFilters() {
             const search = document.getElementById('searchInput').value.toLowerCase();
+            const tier = document.getElementById('tierFilter').value;
             const status = document.getElementById('statusFilter').value;
-            const sex = document.getElementById('sexFilter').value;
 
-            filteredAnimals = animals.filter(animal => {
+            filteredCustomers = customers.filter(customer => {
                 const matchSearch = !search || 
-                    animal.tag_id.toLowerCase().includes(search) ||
-                    (animal.name && animal.name.toLowerCase().includes(search)) ||
-                    (animal.breed && animal.breed.toLowerCase().includes(search));
+                    customer.name.toLowerCase().includes(search) ||
+                    (customer.phone && customer.phone.toLowerCase().includes(search)) ||
+                    (customer.email && customer.email.toLowerCase().includes(search));
                 
-                const matchStatus = !status || animal.status === status;
-                const matchSex = !sex || animal.sex === sex;
+                const matchTier = !tier || customer.tier === tier;
+                const matchStatus = !status || customer.status === status;
 
-                return matchSearch && matchStatus && matchSex;
+                return matchSearch && matchTier && matchStatus;
             });
 
             renderTable();
         }
 
         function setupEventListeners() {
-            const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('input', debounce(applyFilters, 300));
-
+            document.getElementById('searchInput').addEventListener('input', debounce(applyFilters, 300));
+            document.getElementById('tierFilter').addEventListener('change', applyFilters);
             document.getElementById('statusFilter').addEventListener('change', applyFilters);
-            document.getElementById('sexFilter').addEventListener('change', applyFilters);
 
             document.getElementById('clearFilters').addEventListener('click', () => {
                 document.getElementById('searchInput').value = '';
+                document.getElementById('tierFilter').value = '';
                 document.getElementById('statusFilter').value = '';
-                document.getElementById('sexFilter').value = '';
                 applyFilters();
             });
 
             document.getElementById('exportBtn').addEventListener('click', () => {
-                const exportData = filteredAnimals.map(a => ({
-                    tag_id: a.tag_id,
-                    name: a.name,
-                    breed: a.breed,
-                    sex: a.sex,
-                    date_of_birth: a.date_of_birth,
-                    status: a.status,
-                    weight_kg: a.current_weight_kg,
-                    acquisition_date: a.acquisition_date
+                const exportData = filteredCustomers.map(c => ({
+                    name: c.name,
+                    phone: c.phone,
+                    email: c.email,
+                    tier: c.tier,
+                    balance: c.current_balance,
+                    credit_limit: c.credit_limit,
+                    status: c.status
                 }));
-                downloadCSV(exportData, `animals-${formatDate(new Date())}.csv`);
-                showToast('Animals exported successfully', 'success');
+                downloadCSV(exportData, `customers-${formatDate(new Date())}.csv`);
+                showToast('Customers exported successfully', 'success');
             });
         }
 
-        // Global functions for inline onclick
-        window.viewAnimal = (id) => {
-            window.location.href = `detail.html?id=${id}`;
-        };
-
-        window.editAnimal = (id) => {
+        window.editCustomer = (id) => {
             window.location.href = `edit.html?id=${id}`;
         };
 
-        window.deleteAnimal = async (id) => {
-            if (!confirm('Are you sure you want to delete this animal? This action cannot be undone.')) {
+        window.deleteCustomer = async (id) => {
+            if (!confirm('Are you sure you want to delete this customer? This action cannot be undone.')) {
                 return;
             }
 
             try {
                 const { error } = await supabase
-                    .from('animals')
+                    .from('customers')
                     .delete()
                     .eq('id', id);
 
                 if (error) throw error;
 
-                showToast('Animal deleted successfully', 'success');
-                await loadAnimals();
+                showToast('Customer deleted successfully', 'success');
+                await loadCustomers();
 
             } catch (error) {
-                handleError(error, 'Failed to delete animal');
+                handleError(error, 'Failed to delete customer');
             }
         };
 
         init();
     </script>
     
-    <!-- User Menu Dropdown -->
     <script src="../../js/user-menu.js"></script>
-    
     <script type="module" src="../../js/app.js"></script>
 </body>
 </html>

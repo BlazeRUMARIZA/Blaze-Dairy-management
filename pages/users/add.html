@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add User - Blaze Dairy Management</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/></svg>
+                <span class="brand-name">Blaze Dairy</span>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="nav-menu" id="navMenu">
+                <a href="../../index.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    Dashboard
+                </a>
+                <a href="../animals/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.84 4.84l-4.24 4.24M23 12h-6m-6 0H1"/></svg>
+                    Livestock
+                </a>
+                <a href="../production/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 7h20M2 17h20"/></svg>
+                    Production
+                </a>
+                <a href="../feed/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 3h-8v4h8V3z"/></svg>
+                    Feed
+                </a>
+                <a href="../health/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    Health
+                </a>
+                <a href="../sales/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    Sales
+                </a>
+                <a href="../expenses/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Expenses
+                </a>
+                <a href="../customers/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87m-4-12a4 4 0 0 1 0 7.75"/></svg>
+                    Customers
+                </a>
+                <a href="list.html" class="nav-link active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Users
+                </a>
+            </div>
+            <div class="nav-user">
+                <button class="user-menu-btn" id="userMenuBtn">
+                    <span class="user-avatar" id="userAvatar">A</span>
+                    <span class="user-name" id="userName">Admin</span>
+                </button>
+                <div class="user-menu" id="userMenu">
+                    <a href="../settings/profile.html" class="user-menu-item">Profile</a>
+                    <a href="../settings/settings.html" class="user-menu-item">Settings</a>
+                    <hr class="menu-divider">
+                    <button class="user-menu-item" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container" style="max-width: 800px;">
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">Add User</h1>
+                    <p class="page-subtitle">Create new system user account</p>
+                </div>
+            </header>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="alert alert-info" style="margin-bottom: var(--spacing-lg);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 20px; height: 20px;">
+                            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/>
+                        </svg>
+                        <span>A temporary password will be generated for the new user. They should change it on first login.</span>
+                    </div>
+                    
+                    <form id="userForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email" class="form-label form-label-required">Email</label>
+                                <input type="email" id="email" class="form-input" required placeholder="user@example.com">
+                                <span class="form-error"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="full_name" class="form-label form-label-required">Full Name</label>
+                                <input type="text" id="full_name" class="form-input" required placeholder="John Doe">
+                                <span class="form-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone" class="form-label">Phone</label>
+                                <input type="tel" id="phone" class="form-input" placeholder="Phone number">
+                                <span class="form-error"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="role" class="form-label form-label-required">Role</label>
+                                <select id="role" class="form-select" required>
+                                    <option value="staff" selected>Staff</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                                <span class="form-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="status" class="form-label">Status</label>
+                                <select id="status" class="form-select">
+                                    <option value="active" selected>Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                                <span class="form-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <a href="list.html" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <span>Create User</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import supabase from '../../js/supabase-client.js';
+        import { requireAuth, getCurrentUser } from '../../js/auth.js';
+        import { showToast, handleError } from '../../js/utils.js';
+
+        await requireAuth();
+
+        function generateTemporaryPassword() {
+            // Generate a secure temporary password
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%';
+            let password = '';
+            for (let i = 0; i < 12; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return password;
+        }
+
+        function init() {
+            setupForm();
+        }
+
+        function setupForm() {
+            const form = document.getElementById('userForm');
+            const submitBtn = document.getElementById('submitBtn');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                // Get form data
+                const email = document.getElementById('email').value.trim();
+                const full_name = document.getElementById('full_name').value.trim();
+                const phone = document.getElementById('phone').value.trim() || null;
+                const role = document.getElementById('role').value;
+                const status = document.getElementById('status').value;
+
+                // Validation
+                if (!email || !full_name) {
+                    showToast('Email and full name are required', 'error');
+                    return;
+                }
+
+                // Email validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    showToast('Please enter a valid email address', 'error');
+                    return;
+                }
+
+                // Disable button
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<div class="spinner spinner-sm"></div><span>Creating...</span>';
+
+                try {
+                    // Generate temporary password
+                    const temporaryPassword = generateTemporaryPassword();
+
+                    // Step 1: Create auth user using Supabase Admin API
+                    // Note: This requires the service_role key to be configured
+                    // For production, this should be done through a backend API endpoint
+                    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+                        email: email,
+                        password: temporaryPassword,
+                        email_confirm: true,
+                        user_metadata: {
+                            full_name: full_name
+                        }
+                    });
+
+                    if (authError) {
+                        // If admin API is not available, show appropriate error
+                        if (authError.message.includes('admin') || authError.message.includes('service_role')) {
+                            throw new Error('User creation requires admin privileges. Please use the service role key or create users through the backend API.');
+                        }
+                        throw authError;
+                    }
+
+                    // Step 2: Insert user profile into public.users table
+                    const { error: profileError } = await supabase
+                        .from('users')
+                        .insert([{
+                            id: authData.user.id,
+                            email: email,
+                            full_name: full_name,
+                            phone: phone,
+                            role: role,
+                            status: status
+                        }]);
+
+                    if (profileError) {
+                        // If profile creation fails, we should ideally delete the auth user
+                        // But we'll let the user know and they can retry
+                        throw new Error(`User authentication created but profile failed: ${profileError.message}`);
+                    }
+
+                    showToast(`User created successfully! Temporary password: ${temporaryPassword}`, 'success', 10000);
+                    
+                    // Show password in alert as well
+                    alert(`User created successfully!\n\nEmail: ${email}\nTemporary Password: ${temporaryPassword}\n\nPlease save this password and share it securely with the user. They should change it on first login.`);
+
+                    // Redirect after delay
+                    setTimeout(() => {
+                        window.location.href = 'list.html';
+                    }, 2000);
+
+                } catch (error) {
+                    console.error('Error creating user:', error);
+                    
+                    // Check if it's the admin API error
+                    if (error.message.includes('admin') || error.message.includes('service_role')) {
+                        // Fallback: Try to use signUp (though this won't work perfectly for admin creation)
+                        try {
+                            const tempPassword = generateTemporaryPassword();
+                            
+                            showToast('Using alternative user creation method...', 'info');
+                            
+                            // This creates a user but they need to confirm email
+                            const { data: signupData, error: signupError } = await supabase.auth.signUp({
+                                email: email,
+                                password: tempPassword,
+                                options: {
+                                    data: {
+                                        full_name: full_name
+                                    }
+                                }
+                            });
+
+                            if (signupError) throw signupError;
+
+                            // Insert profile
+                            const { error: profileError } = await supabase
+                                .from('users')
+                                .insert([{
+                                    id: signupData.user.id,
+                                    email: email,
+                                    full_name: full_name,
+                                    phone: phone,
+                                    role: role,
+                                    status: status
+                                }]);
+
+                            if (profileError) throw profileError;
+
+                            showToast('User created! They need to confirm their email.', 'warning', 5000);
+                            alert(`User created!\n\nEmail: ${email}\nPassword: ${tempPassword}\n\nNote: The user must confirm their email address before logging in.`);
+                            
+                            setTimeout(() => {
+                                window.location.href = 'list.html';
+                            }, 2000);
+
+                        } catch (fallbackError) {
+                            handleError(fallbackError, 'Failed to create user. Please contact your administrator.');
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = '<span>Create User</span>';
+                        }
+                    } else {
+                        handleError(error, 'Failed to create user');
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<span>Create User</span>';
+                    }
+                }
+            });
+        }
+
+        init();
+    </script>
+    <script src="../../js/user-menu.js"></script>
+    <script type="module" src="../../js/app.js"></script>
+</body>
+</html>
