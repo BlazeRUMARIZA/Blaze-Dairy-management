@@ -139,6 +139,18 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="quality_grade" class="form-label">Quality Grade</label>
+                            <select id="quality_grade" class="form-select">
+                                <option value="">Select Grade</option>
+                                <option value="A">Grade A (Premium)</option>
+                                <option value="B">Grade B (Standard)</option>
+                                <option value="C">Grade C (Below Standard)</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                            <span class="form-error"></span>
+                        </div>
+
+                        <div class="form-group">
                             <label for="notes" class="form-label">Notes</label>
                             <textarea id="notes" class="form-textarea" rows="3" placeholder="Any additional notes..."></textarea>
                             <span class="form-error"></span>
@@ -210,6 +222,7 @@
                     fat_percentage: document.getElementById('fat_percentage').value ? parseFloat(document.getElementById('fat_percentage').value) : null,
                     snf_percentage: document.getElementById('snf_percentage').value ? parseFloat(document.getElementById('snf_percentage').value) : null,
                     temperature_celsius: document.getElementById('temperature').value ? parseFloat(document.getElementById('temperature').value) : null,
+                    quality_grade: document.getElementById('quality_grade').value || null,
                     notes: document.getElementById('notes').value.trim() || null
                 };
 

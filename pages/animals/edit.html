@@ -145,6 +145,14 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="current_weight" class="form-label">Current Weight (kg)</label>
+                                <input type="number" id="current_weight" class="form-input" step="0.1" min="0" placeholder="0.0">
+                                <span class="form-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
                                 <label for="status" class="form-label">Status</label>
                                 <select id="status" class="form-select">
                                     <option value="active">Active</option>
@@ -154,18 +162,33 @@
                                 </select>
                                 <span class="form-error"></span>
                             </div>
+
+                            <div class="form-group">
+                                <label for="acquisition_type" class="form-label">Acquisition Type</label>
+                                <select id="acquisition_type" class="form-select">
+                                    <option value="">Select Type</option>
+                                    <option value="birth">Birth</option>
+                                    <option value="purchase">Purchase</option>
+                                    <option value="transfer">Transfer</option>
+                                </select>
+                                <span class="form-error"></span>
+                            </div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="dam_tag" class="form-label">Dam Tag</label>
-                                <input type="text" id="dam_tag" class="form-input" placeholder="Mother's tag">
+                                <label for="mother_id" class="form-label">Mother (Dam)</label>
+                                <select id="mother_id" class="form-select">
+                                    <option value="">Select Mother</option>
+                                </select>
                                 <span class="form-error"></span>
                             </div>
 
                             <div class="form-group">
-                                <label for="sire_tag" class="form-label">Sire Tag</label>
-                                <input type="text" id="sire_tag" class="form-input" placeholder="Father's tag">
+                                <label for="father_id" class="form-label">Father (Sire)</label>
+                                <select id="father_id" class="form-select">
+                                    <option value="">Select Father</option>
+                                </select>
                                 <span class="form-error"></span>
                             </div>
                         </div>
@@ -211,9 +234,46 @@
                 return;
             }
 
+            await loadParentAnimals();
             await loadAnimal();
             setupAgeCalculation();
             setupForm();
+        }
+
+        async function loadParentAnimals() {
+            try {
+                const { data, error } = await supabase
+                    .from('animals')
+                    .select('id, tag_id, name, sex')
+                    .order('tag_id');
+
+                if (error) throw error;
+
+                const motherSelect = document.getElementById('mother_id');
+                const fatherSelect = document.getElementById('father_id');
+                
+                (data || []).forEach(animal => {
+                    // Skip current animal (can't be its own parent)
+                    if (animal.id === animalId) return;
+                    
+                    const option = document.createElement('option');
+                    option.value = animal.id;
+                    option.textContent = `${animal.tag_id}${animal.name ? ' - ' + animal.name : ''}`;
+                    
+                    if (animal.sex === 'female') {
+                        motherSelect.appendChild(option.cloneNode(true));
+                        motherSelect.lastChild.textContent = option.textContent;
+                        motherSelect.lastChild.value = option.value;
+                    }
+                    if (animal.sex === 'male') {
+                        fatherSelect.appendChild(option.cloneNode(true));
+                        fatherSelect.lastChild.textContent = option.textContent;
+                        fatherSelect.lastChild.value = option.value;
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading parent animals:', error);
+            }
         }
 
         async function loadAnimal() {
@@ -245,7 +305,11 @@
                 document.getElementById('date_of_birth').value = data.date_of_birth || '';
                 document.getElementById('acquisition_date').value = data.acquisition_date || '';
                 document.getElementById('acquisition_cost').value = data.purchase_price || '';
+                document.getElementById('current_weight').value = data.current_weight_kg || '';
                 document.getElementById('status').value = data.status || 'active';
+                document.getElementById('acquisition_type').value = data.acquisition_type || '';
+                document.getElementById('mother_id').value = data.mother_id || '';
+                document.getElementById('father_id').value = data.father_id || '';
                 document.getElementById('notes').value = data.notes || '';
 
                 // Calculate and display age
@@ -324,7 +388,11 @@
                     date_of_birth: document.getElementById('date_of_birth').value,
                     acquisition_date: document.getElementById('acquisition_date').value,
                     purchase_price: document.getElementById('acquisition_cost').value ? parseFloat(document.getElementById('acquisition_cost').value) : null,
+                    current_weight_kg: document.getElementById('current_weight').value ? parseFloat(document.getElementById('current_weight').value) : null,
                     status: document.getElementById('status').value,
+                    acquisition_type: document.getElementById('acquisition_type').value || null,
+                    mother_id: document.getElementById('mother_id').value || null,
+                    father_id: document.getElementById('father_id').value || null,
                     notes: document.getElementById('notes').value.trim() || null
                 };
 

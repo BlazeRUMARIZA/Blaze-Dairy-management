@@ -319,7 +319,7 @@
                     <td>${formatDate(record.event_date)}</td>
                     <td><strong>${record.animals?.tag_id || 'Unknown'}${record.animals?.name ? ' - ' + record.animals.name : ''}</strong></td>
                     <td><span class="badge badge-${getEventColor(record.event_type)}">${record.event_type}</span></td>
-                    <td>${record.medication || '--'}</td>
+                    <td>${record.diagnosis || '--'}</td>
                     <td>${record.cost ? formatCurrency(record.cost) : '--'}</td>
                     <td>${record.next_visit_date ? formatDate(record.next_visit_date) : '--'}</td>
                     <td>
