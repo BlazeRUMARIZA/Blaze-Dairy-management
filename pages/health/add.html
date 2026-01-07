@@ -203,11 +203,11 @@
                     event_date: formData.get('event_date'),
                     animal_id: formData.get('animal_id'),
                     event_type: formData.get('event_type'),
-                    description: formData.get('description') || null,
+                    diagnosis: formData.get('description') || null,
                     cost: formData.get('cost') || null,
-                    veterinarian: formData.get('veterinarian') || null,
+                    veterinarian_name: formData.get('veterinarian') || null,
                     treatment: formData.get('treatment') || null,
-                    next_due_date: formData.get('next_due_date') || null,
+                    next_visit_date: formData.get('next_due_date') || null,
                     notes: formData.get('notes') || null,
                     recorded_by: user.id
                 };

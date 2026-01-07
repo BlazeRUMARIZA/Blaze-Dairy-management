@@ -254,13 +254,13 @@
                 document.getElementById('totalFeeds').textContent = allFeeds.length;
 
                 // Total stock
-                const totalStock = allFeeds.reduce((sum, feed) => sum + parseFloat(feed.stock_quantity || 0), 0);
+                const totalStock = allFeeds.reduce((sum, feed) => sum + parseFloat(feed.current_stock || 0), 0);
                 document.getElementById('totalStock').textContent = formatNumber(totalStock, 0) + ' kg';
 
                 // Low stock items
                 const lowStockCount = allFeeds.filter(feed => {
-                    const stock = parseFloat(feed.stock_quantity || 0);
-                    const reorder = parseFloat(feed.reorder_level || 0);
+                    const stock = parseFloat(feed.current_stock || 0);
+                    const reorder = parseFloat(feed.min_stock_threshold || 0);
                     return stock <= reorder;
                 }).length;
                 document.getElementById('lowStockItems').textContent = lowStockCount;
@@ -329,8 +329,8 @@
             const pageFeeds = filteredFeeds.slice(start, end);
 
             tbody.innerHTML = pageFeeds.map(feed => {
-                const stock = parseFloat(feed.stock_quantity || 0);
-                const reorder = parseFloat(feed.reorder_level || 0);
+                const stock = parseFloat(feed.current_stock || 0);
+                const reorder = parseFloat(feed.min_stock_threshold || 0);
                 const isLowStock = stock <= reorder;
                 
                 const statusBadge = isLowStock 
@@ -338,7 +338,7 @@
                     : '<span class="badge badge-success">In Stock</span>';
 
                 const supplierName = suppliers[feed.supplier_id] || '--';
-                const typeBadge = getTypeBadge(feed.type);
+                const typeBadge = getTypeBadge(feed.category);
 
                 return `
                     <tr data-record-id="${feed.id}">

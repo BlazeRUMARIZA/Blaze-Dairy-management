@@ -233,7 +233,7 @@
                 document.getElementById('payment_method').value = data.payment_method || '';
                 document.getElementById('paid_by').value = data.paid_by || '';
                 document.getElementById('receipt_number').value = data.receipt_number || '';
-                document.getElementById('is_paid').checked = data.is_paid || false;
+                document.getElementById('notes').value = data.notes || '';
                 document.getElementById('notes').value = data.notes || '';
 
                 // Show content
@@ -265,7 +265,7 @@
                     payment_method: document.getElementById('payment_method').value || null,
                     paid_by: document.getElementById('paid_by').value.trim() || null,
                     receipt_number: document.getElementById('receipt_number').value.trim() || null,
-                    is_paid: document.getElementById('is_paid').checked,
+                    notes: document.getElementById('notes').value.trim() || null
                     notes: document.getElementById('notes').value.trim() || null
                 };
 

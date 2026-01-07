@@ -213,14 +213,13 @@
                 // Get form data
                 const formData = {
                     name: document.getElementById('name').value.trim(),
-                    type: document.getElementById('type').value,
+                    category: document.getElementById('type').value,
                     unit: document.getElementById('unit').value,
-                    stock_quantity: parseFloat(document.getElementById('stock_quantity').value),
+                    current_stock: parseFloat(document.getElementById('stock_quantity').value),
                     cost_per_unit: document.getElementById('cost_per_unit').value ? parseFloat(document.getElementById('cost_per_unit').value) : null,
                     supplier_id: document.getElementById('supplier_id').value || null,
-                    reorder_level: document.getElementById('reorder_level').value ? parseFloat(document.getElementById('reorder_level').value) : null,
-                    storage_location: document.getElementById('storage_location').value.trim() || null,
-                    notes: document.getElementById('notes').value.trim() || null
+                    min_stock_threshold: document.getElementById('reorder_level').value ? parseFloat(document.getElementById('reorder_level').value) : null,
+                    description: document.getElementById('notes').value.trim() || null
                 };
 
                 // Validation
@@ -229,12 +228,12 @@
                     return;
                 }
 
-                if (!formData.type) {
-                    showToast('Feed type is required', 'error');
+                if (!formData.category) {
+                    showToast('Feed category is required', 'error');
                     return;
                 }
 
-                if (!formData.stock_quantity || formData.stock_quantity < 0) {
+                if (!formData.current_stock || formData.current_stock < 0) {
                     showToast('Stock quantity must be greater than or equal to 0', 'error');
                     return;
                 }

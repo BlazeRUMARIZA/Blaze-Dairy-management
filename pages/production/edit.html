@@ -223,10 +223,10 @@
                 document.getElementById('production_date').value = data.production_date;
                 document.getElementById('shift').value = data.shift;
                 document.getElementById('animal_id').value = data.animal_id;
-                document.getElementById('quantity').value = data.quantity;
+                document.getElementById('quantity').value = data.volume_liters;
                 if (data.fat_percentage) document.getElementById('fat_percentage').value = data.fat_percentage;
                 if (data.snf_percentage) document.getElementById('snf_percentage').value = data.snf_percentage;
-                if (data.temperature) document.getElementById('temperature').value = data.temperature;
+                if (data.temperature_celsius) document.getElementById('temperature').value = data.temperature_celsius;
                 if (data.notes) document.getElementById('notes').value = data.notes;
 
                 document.getElementById('loadingState').style.display = 'none';
@@ -250,10 +250,10 @@
                     production_date: document.getElementById('production_date').value,
                     shift: document.getElementById('shift').value,
                     animal_id: document.getElementById('animal_id').value,
-                    quantity: parseFloat(document.getElementById('quantity').value),
+                    volume_liters: parseFloat(document.getElementById('quantity').value),
                     fat_percentage: document.getElementById('fat_percentage').value ? parseFloat(document.getElementById('fat_percentage').value) : null,
                     snf_percentage: document.getElementById('snf_percentage').value ? parseFloat(document.getElementById('snf_percentage').value) : null,
-                    temperature: document.getElementById('temperature').value ? parseFloat(document.getElementById('temperature').value) : null,
+                    temperature_celsius: document.getElementById('temperature').value ? parseFloat(document.getElementById('temperature').value) : null,
                     notes: document.getElementById('notes').value.trim() || null
                 };
 

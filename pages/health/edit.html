@@ -234,11 +234,11 @@
             document.getElementById('eventDate').value = record.event_date || '';
             document.getElementById('animalId').value = record.animal_id || '';
             document.getElementById('eventType').value = record.event_type || '';
-            document.getElementById('description').value = record.description || '';
+            document.getElementById('description').value = record.diagnosis || '';
             document.getElementById('cost').value = record.cost || '';
-            document.getElementById('veterinarian').value = record.veterinarian || '';
+            document.getElementById('veterinarian').value = record.veterinarian_name || '';
             document.getElementById('treatment').value = record.treatment || '';
-            document.getElementById('nextDueDate').value = record.next_due_date || '';
+            document.getElementById('nextDueDate').value = record.next_visit_date || '';
             document.getElementById('notes').value = record.notes || '';
         }
 
@@ -255,11 +255,11 @@
                     event_date: formData.get('event_date'),
                     animal_id: formData.get('animal_id'),
                     event_type: formData.get('event_type'),
-                    description: formData.get('description') || null,
+                    diagnosis: formData.get('description') || null,
                     cost: formData.get('cost') || null,
-                    veterinarian: formData.get('veterinarian') || null,
+                    veterinarian_name: formData.get('veterinarian') || null,
                     treatment: formData.get('treatment') || null,
-                    next_due_date: formData.get('next_due_date') || null,
+                    next_visit_date: formData.get('next_due_date') || null,
                     notes: formData.get('notes') || null
                 };
 

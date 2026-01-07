@@ -244,14 +244,13 @@
 
                 // Populate form
                 document.getElementById('name').value = data.name || '';
-                document.getElementById('type').value = data.type || '';
+                document.getElementById('type').value = data.category || '';
                 document.getElementById('unit').value = data.unit || 'kg';
-                document.getElementById('stock_quantity').value = data.stock_quantity || 0;
+                document.getElementById('stock_quantity').value = data.current_stock || 0;
                 document.getElementById('cost_per_unit').value = data.cost_per_unit || '';
                 document.getElementById('supplier_id').value = data.supplier_id || '';
-                document.getElementById('reorder_level').value = data.reorder_level || '';
-                document.getElementById('storage_location').value = data.storage_location || '';
-                document.getElementById('notes').value = data.notes || '';
+                document.getElementById('reorder_level').value = data.min_stock_threshold || '';
+                document.getElementById('notes').value = data.description || '';
 
                 // Show content
                 document.getElementById('loadingState').style.display = 'none';
@@ -276,14 +275,13 @@
                 // Get form data
                 const formData = {
                     name: document.getElementById('name').value.trim(),
-                    type: document.getElementById('type').value,
+                    category: document.getElementById('type').value,
                     unit: document.getElementById('unit').value,
-                    stock_quantity: parseFloat(document.getElementById('stock_quantity').value),
+                    current_stock: parseFloat(document.getElementById('stock_quantity').value),
                     cost_per_unit: document.getElementById('cost_per_unit').value ? parseFloat(document.getElementById('cost_per_unit').value) : null,
                     supplier_id: document.getElementById('supplier_id').value || null,
-                    reorder_level: document.getElementById('reorder_level').value ? parseFloat(document.getElementById('reorder_level').value) : null,
-                    storage_location: document.getElementById('storage_location').value.trim() || null,
-                    notes: document.getElementById('notes').value.trim() || null
+                    min_stock_threshold: document.getElementById('reorder_level').value ? parseFloat(document.getElementById('reorder_level').value) : null,
+                    description: document.getElementById('notes').value.trim() || null
                 };
 
                 // Validation
@@ -292,12 +290,12 @@
                     return;
                 }
 
-                if (!formData.type) {
-                    showToast('Feed type is required', 'error');
+                if (!formData.category) {
+                    showToast('Feed category is required', 'error');
                     return;
                 }
 
-                if (!formData.stock_quantity || formData.stock_quantity < 0) {
+                if (!formData.current_stock || formData.current_stock < 0) {
                     showToast('Stock quantity must be greater than or equal to 0', 'error');
                     return;
                 }
