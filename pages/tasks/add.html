@@ -263,8 +263,7 @@
                     due_date: document.getElementById('due_date').value,
                     priority: document.getElementById('priority').value,
                     status: document.getElementById('status').value,
-                    assigned_to: document.getElementById('assigned_to').value,
-                    progress: parseInt(document.getElementById('progress').value),
+                    assignee_id: document.getElementById('assigned_to').value || null,
                     notes: document.getElementById('notes').value || null,
                     created_by: user.id
                 };

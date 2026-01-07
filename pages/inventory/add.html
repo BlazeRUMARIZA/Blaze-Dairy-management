@@ -211,11 +211,11 @@
                 const formData = {
                     name: document.getElementById('name').value.trim(),
                     category: document.getElementById('category').value,
-                    current_stock: parseFloat(document.getElementById('current_stock').value),
+                    quantity: parseFloat(document.getElementById('current_stock').value),
                     unit: document.getElementById('unit').value.trim(),
                     unit_cost: parseFloat(document.getElementById('unit_cost').value),
-                    reorder_level: parseFloat(document.getElementById('reorder_level').value),
-                    storage_location: document.getElementById('storage_location').value.trim() || null,
+                    min_threshold: parseFloat(document.getElementById('reorder_level').value),
+                    location: document.getElementById('storage_location').value.trim() || null,
                     supplier_id: document.getElementById('supplier_id').value || null,
                     notes: document.getElementById('notes').value.trim() || null
                 };

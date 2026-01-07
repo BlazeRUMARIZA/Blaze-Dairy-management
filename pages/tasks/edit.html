@@ -269,9 +269,7 @@
                 document.getElementById('due_date').value = data.due_date;
                 document.getElementById('priority').value = data.priority;
                 document.getElementById('status').value = data.status;
-                document.getElementById('assigned_to').value = data.assigned_to;
-                document.getElementById('progress').value = data.progress || 0;
-                progressValue.textContent = data.progress || 0;
+                document.getElementById('assigned_to').value = data.assignee_id || '';
                 document.getElementById('notes').value = data.notes || '';
 
                 // Hide loading state and show content
@@ -321,8 +319,7 @@
                     due_date: document.getElementById('due_date').value,
                     priority: document.getElementById('priority').value,
                     status: document.getElementById('status').value,
-                    assigned_to: document.getElementById('assigned_to').value,
-                    progress: parseInt(document.getElementById('progress').value),
+                    assignee_id: document.getElementById('assigned_to').value || null,
                     notes: document.getElementById('notes').value || null
                 };
 

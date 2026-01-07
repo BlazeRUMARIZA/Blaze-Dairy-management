@@ -242,7 +242,7 @@
 
             const lowStock = allItems.filter(i => {
                 const qty = parseFloat(i.quantity) || 0;
-                const reorder = parseFloat(i.reorder_level) || 0;
+                const reorder = parseFloat(i.min_threshold) || 0;
                 return qty > 0 && qty <= reorder;
             }).length;
             document.getElementById('lowStock').textContent = lowStock;
@@ -263,7 +263,7 @@
                 const matchesLocation = !location || item.location === location;
                 
                 const qty = parseFloat(item.quantity) || 0;
-                const reorder = parseFloat(item.reorder_level) || 0;
+                const reorder = parseFloat(item.min_threshold) || 0;
                 const matchesLowStock = !lowStockOnly || (qty <= reorder);
 
                 return matchesSearch && matchesLocation && matchesLowStock;
@@ -297,7 +297,7 @@
 
             tbody.innerHTML = pageItems.map(item => {
                 const qty = parseFloat(item.quantity) || 0;
-                const reorder = parseFloat(item.reorder_level) || 0;
+                const reorder = parseFloat(item.min_threshold) || 0;
                 const unitCost = parseFloat(item.unit_cost) || 0;
                 const totalValue = qty * unitCost;
                 const status = getStockStatus(qty, reorder);
@@ -368,7 +368,7 @@
                     Unit: i.unit || '',
                     'Unit Cost': i.unit_cost || '',
                     'Total Value': (parseFloat(i.quantity || 0) * parseFloat(i.unit_cost || 0)).toFixed(2),
-                    'Reorder Level': i.reorder_level || '',
+                    'Reorder Level': i.min_threshold || '',
                     Location: i.location || ''
                 }));
                 downloadCSV(exportData, 'inventory.csv');

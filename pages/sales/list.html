@@ -298,7 +298,7 @@
                 <tr data-record-id="${sale.id}">
                     <td>${formatDate(sale.sale_date)}</td>
                     <td><strong>${sale.customer_name || '--'}</strong></td>
-                    <td>${sale.product_name || '--'}</td>
+                    <td>${sale.item_name || '--'}</td>
                     <td>${formatNumber(sale.quantity)} ${sale.unit || ''}</td>
                     <td>${formatCurrency(sale.unit_price)}</td>
                     <td><strong>${formatCurrency(sale.total_amount)}</strong></td>
@@ -353,7 +353,7 @@
                 const exportData = filteredSales.map(s => ({
                     Date: s.sale_date,
                     Customer: s.customer_name || '',
-                    Product: s.product_name || '',
+                    Product: s.item_name || '',
                     Quantity: s.quantity || '',
                     Unit: s.unit || '',
                     'Unit Price': s.unit_price || '',

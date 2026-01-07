@@ -243,10 +243,10 @@
                 // Populate form
                 document.getElementById('sale_date').value = data.sale_date || '';
                 document.getElementById('customer_id').value = data.customer_id || '';
-                document.getElementById('product_name').value = data.product_name || '';
+                document.getElementById('product_name').value = data.item_name || '';
                 document.getElementById('quantity').value = data.quantity || 0;
                 document.getElementById('unit_price').value = data.unit_price || 0;
-                document.getElementById('total').value = data.total || 0;
+                document.getElementById('total').value = data.total_amount || 0;
                 document.getElementById('status').value = data.status || 'pending';
                 document.getElementById('payment_method').value = data.payment_method || '';
                 document.getElementById('notes').value = data.notes || '';
@@ -288,10 +288,10 @@
                 const formData = {
                     sale_date: document.getElementById('sale_date').value,
                     customer_id: document.getElementById('customer_id').value,
-                    product_name: document.getElementById('product_name').value.trim(),
+                    item_name: document.getElementById('product_name').value.trim(),
                     quantity: parseFloat(document.getElementById('quantity').value),
                     unit_price: parseFloat(document.getElementById('unit_price').value),
-                    total: parseFloat(document.getElementById('total').value),
+                    total_amount: parseFloat(document.getElementById('total').value),
                     status: document.getElementById('status').value,
                     payment_method: document.getElementById('payment_method').value || null,
                     notes: document.getElementById('notes').value.trim() || null

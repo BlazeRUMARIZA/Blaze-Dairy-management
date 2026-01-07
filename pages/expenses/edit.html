@@ -231,9 +231,8 @@
                 document.getElementById('description').value = data.description || '';
                 document.getElementById('amount').value = data.amount || 0;
                 document.getElementById('payment_method').value = data.payment_method || '';
-                document.getElementById('paid_by').value = data.paid_by || '';
-                document.getElementById('receipt_number').value = data.receipt_number || '';
-                document.getElementById('notes').value = data.notes || '';
+                document.getElementById('paid_by').value = data.vendor_name || '';
+                document.getElementById('receipt_number').value = data.receipt_url || '';
                 document.getElementById('notes').value = data.notes || '';
 
                 // Show content
@@ -263,9 +262,8 @@
                     description: document.getElementById('description').value.trim(),
                     amount: parseFloat(document.getElementById('amount').value),
                     payment_method: document.getElementById('payment_method').value || null,
-                    paid_by: document.getElementById('paid_by').value.trim() || null,
-                    receipt_number: document.getElementById('receipt_number').value.trim() || null,
-                    notes: document.getElementById('notes').value.trim() || null
+                    vendor_name: document.getElementById('paid_by')?.value?.trim() || null,
+                    receipt_url: document.getElementById('receipt_number')?.value?.trim() || null,
                     notes: document.getElementById('notes').value.trim() || null
                 };
 
@@ -295,8 +293,6 @@
                 submitBtn.innerHTML = '<div class="spinner spinner-sm"></div><span>Updating...</span>';
 
                 try {
-                    const user = await getCurrentUser();
-                    formData.updated_by = user.id;
                     formData.updated_at = new Date().toISOString();
 
                     const { error } = await supabase

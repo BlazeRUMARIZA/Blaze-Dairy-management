@@ -235,19 +235,17 @@
                 }
 
                 // Store original tag for validation
-                originalTag = data.tag;
+                originalTag = data.tag_id;
 
                 // Populate form
-                document.getElementById('tag').value = data.tag || '';
+                document.getElementById('tag').value = data.tag_id || '';
                 document.getElementById('name').value = data.name || '';
                 document.getElementById('breed').value = data.breed || '';
                 document.getElementById('sex').value = data.sex || '';
                 document.getElementById('date_of_birth').value = data.date_of_birth || '';
                 document.getElementById('acquisition_date').value = data.acquisition_date || '';
-                document.getElementById('acquisition_cost').value = data.acquisition_cost || '';
+                document.getElementById('acquisition_cost').value = data.purchase_price || '';
                 document.getElementById('status').value = data.status || 'active';
-                document.getElementById('dam_tag').value = data.dam_tag || '';
-                document.getElementById('sire_tag').value = data.sire_tag || '';
                 document.getElementById('notes').value = data.notes || '';
 
                 // Calculate and display age
@@ -319,16 +317,14 @@
 
                 // Get form data
                 const formData = {
-                    tag: document.getElementById('tag').value.trim(),
+                    tag_id: document.getElementById('tag').value.trim(),
                     name: document.getElementById('name').value.trim() || null,
                     breed: document.getElementById('breed').value.trim(),
                     sex: document.getElementById('sex').value,
                     date_of_birth: document.getElementById('date_of_birth').value,
                     acquisition_date: document.getElementById('acquisition_date').value,
-                    acquisition_cost: document.getElementById('acquisition_cost').value ? parseFloat(document.getElementById('acquisition_cost').value) : null,
+                    purchase_price: document.getElementById('acquisition_cost').value ? parseFloat(document.getElementById('acquisition_cost').value) : null,
                     status: document.getElementById('status').value,
-                    dam_tag: document.getElementById('dam_tag').value.trim() || null,
-                    sire_tag: document.getElementById('sire_tag').value.trim() || null,
                     notes: document.getElementById('notes').value.trim() || null
                 };
 
@@ -383,8 +379,6 @@
                 submitBtn.innerHTML = '<div class="spinner spinner-sm"></div><span>Updating...</span>';
 
                 try {
-                    const user = await getCurrentUser();
-                    formData.updated_by = user.id;
                     formData.updated_at = new Date().toISOString();
 
                     const { error } = await supabase
@@ -393,7 +387,7 @@
                         .eq('id', animalId);
 
                     if (error) {
-                        if (error.code === '23505' && formData.tag !== originalTag) {
+                        if (error.code === '23505' && formData.tag_id !== originalTag) {
                             throw new Error('Tag/ID already exists. Please use a unique identifier.');
                         }
                         throw error;

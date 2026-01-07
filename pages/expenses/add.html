@@ -203,9 +203,8 @@
                     description: document.getElementById('description').value.trim(),
                     amount: parseFloat(document.getElementById('amount').value),
                     payment_method: document.getElementById('payment_method').value || null,
-                    paid_by: document.getElementById('paid_by').value.trim() || null,
-                    receipt_number: document.getElementById('receipt_number').value.trim() || null,
-                    is_paid: document.getElementById('is_paid').checked,
+                    vendor_name: document.getElementById('paid_by')?.value?.trim() || null,
+                    receipt_url: document.getElementById('receipt_number')?.value?.trim() || null,
                     notes: document.getElementById('notes').value.trim() || null
                 };
 
