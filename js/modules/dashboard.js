@@ -110,7 +110,7 @@ async function loadProductionChart() {
     if (!ctx) return;
     
     // Destroy existing chart if any
-    if (window.productionChart) {
+    if (window.productionChart && typeof window.productionChart.destroy === 'function') {
       window.productionChart.destroy();
     }
     
@@ -169,7 +169,7 @@ async function loadFinanceChart() {
     if (!ctx) return;
     
     // Destroy existing chart if any
-    if (window.financeChart) {
+    if (window.financeChart && typeof window.financeChart.destroy === 'function') {
       window.financeChart.destroy();
     }
     
