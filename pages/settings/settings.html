@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Blaze Dairy Management</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/pages/settings.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/>
+                </svg>
+                <span class="brand-name">Blaze Dairy</span>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="nav-menu" id="navMenu">
+                <a href="../../index.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    Dashboard
+                </a>
+                <a href="../animals/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.84 4.84l-4.24 4.24M23 12h-6m-6 0H1"/></svg>
+                    Livestock
+                </a>
+                <a href="../production/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 7h20M2 17h20"/></svg>
+                    Production
+                </a>
+                <a href="../feed/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 3h-8v4h8V3z"/></svg>
+                    Feed
+                </a>
+                <a href="../health/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    Health
+                </a>
+                <a href="../sales/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    Sales
+                </a>
+                <a href="../expenses/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Expenses
+                </a>
+                <a href="../inventory/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    Inventory
+                </a>
+                <a href="../tasks/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    Tasks
+                </a>
+            </div>
+            <div class="nav-user">
+                <button class="user-menu-btn" id="userMenuBtn">
+                    <span class="user-avatar" id="userAvatar">A</span>
+                    <span class="user-name" id="userName">Admin</span>
+                </button>
+                <div class="user-menu" id="userMenu">
+                    <a href="profile.html" class="user-menu-item">Profile</a>
+                    <a href="settings.html" class="user-menu-item">Settings</a>
+                    <hr class="menu-divider">
+                    <button class="user-menu-item" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container settings-container">
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">User Management</h1>
+                    <p class="page-subtitle">Manage user accounts and roles (Admin only)</p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-secondary" id="exportUsersBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Export CSV
+                    </button>
+                    <button class="btn btn-primary" id="refreshBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+                        Refresh
+                    </button>
+                </div>
+            </header>
+
+            <div class="alerts-container" id="alertsContainer"></div>
+
+            <!-- Stats Cards -->
+            <div class="settings-stats">
+                <div class="settings-stat-card">
+                    <div class="settings-stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"/></svg>
+                    </div>
+                    <p class="settings-stat-label">Total Users</p>
+                    <p class="settings-stat-value" id="totalUsers">0</p>
+                </div>
+                <div class="settings-stat-card">
+                    <div class="settings-stat-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+                    </div>
+                    <p class="settings-stat-label">Active Users</p>
+                    <p class="settings-stat-value" id="activeUsers">0</p>
+                </div>
+                <div class="settings-stat-card">
+                    <div class="settings-stat-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a6 6 0 0 0 6-6V7a6 6 0 1 0-12 0v2a6 6 0 0 0 6 6zm0 0v6m-3 0h6"/><circle cx="12" cy="9" r="2"/></svg>
+                    </div>
+                    <p class="settings-stat-label">Admin Users</p>
+                    <p class="settings-stat-value" id="adminUsers">0</p>
+                </div>
+                <div class="settings-stat-card">
+                    <div class="settings-stat-icon" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                    </div>
+                    <p class="settings-stat-label">Staff Users</p>
+                    <p class="settings-stat-value" id="staffUsers">0</p>
+                </div>
+            </div>
+
+            <!-- Users Table Card -->
+            <div class="settings-card">
+                <div class="settings-card-header">
+                    <div style="flex: 1;">
+                        <h3 class="settings-card-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"/></svg>
+                            All Users
+                        </h3>
+                        <p class="settings-card-subtitle">View and manage all registered users</p>
+                    </div>
+                    <input type="search" id="searchInput" class="form-input" placeholder="Search users..." style="max-width: 300px;">
+                </div>
+                <div class="settings-card-body" style="padding: 0;">
+                    <div class="users-table-container">
+                        <table class="users-table">
+                            <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Created At</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 2rem;">
+                                        <div class="spinner"></div>
+                                        <p style="margin-top: 1rem;">Loading users...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit Role Modal -->
+    <div class="modal" id="editRoleModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit User Role</h3>
+                <button class="modal-close" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="user-info" style="margin-bottom: var(--spacing-lg); padding: var(--spacing-md); background: var(--bg-secondary); border-radius: var(--radius-md);">
+                    <p style="margin-bottom: 0.5rem;"><strong>User:</strong> <span id="modalUserName"></span></p>
+                    <p style="margin-bottom: 0;"><strong>Email:</strong> <span id="modalUserEmail"></span></p>
+                </div>
+                <form id="editRoleForm">
+                    <div class="form-group">
+                        <label for="roleSelect" class="form-label">Select Role *</label>
+                        <select id="roleSelect" class="form-input" required>
+                            <option value="staff">Staff</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <small style="color: var(--text-secondary); font-size: 0.875rem;">
+                            Admin users have full access to all features including user management.
+                        </small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelModalBtn">Cancel</button>
+                <button type="submit" form="editRoleForm" class="btn btn-primary" id="saveRoleBtn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/user-menu.js"></script>
+    <script type="module">
+        import supabase from '../../js/supabase-client.js';
+        import { requireAuth, requireAdmin, getCurrentUser } from '../../js/auth.js';
+        import { showToast, formatDateReadable } from '../../js/utils.js';
+
+        let allUsers = [];
+        let currentEditUser = null;
+        let currentUserData = null;
+
+        // Initialize
+        async function init() {
+            await requireAuth();
+            const isAdmin = await requireAdmin();
+            
+            if (!isAdmin) {
+                return; // requireAdmin already redirects
+            }
+
+            currentUserData = await getCurrentUser();
+            updateUserDisplay();
+            await loadUsers();
+            setupEventListeners();
+        }
+
+        // Update user display in nav
+        function updateUserDisplay() {
+            if (currentUserData) {
+                const avatar = currentUserData.full_name ? currentUserData.full_name.charAt(0).toUpperCase() : 'A';
+                document.getElementById('userAvatar').textContent = avatar;
+                document.getElementById('userName').textContent = currentUserData.full_name || 'Admin';
+            }
+        }
+
+        // Load all users
+        async function loadUsers() {
+            try {
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                allUsers = data || [];
+                updateStats();
+                renderUsersTable(allUsers);
+
+            } catch (error) {
+                console.error('Error loading users:', error);
+                showToast('Failed to load users', 'danger');
+                document.getElementById('usersTableBody').innerHTML = `
+                    <tr><td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                        Failed to load users. Please try again.
+                    </td></tr>
+                `;
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const totalUsers = allUsers.length;
+            const activeUsers = allUsers.filter(u => u.status === 'active').length;
+            const adminUsers = allUsers.filter(u => u.role === 'admin').length;
+            const staffUsers = allUsers.filter(u => u.role === 'staff').length;
+
+            document.getElementById('totalUsers').textContent = totalUsers;
+            document.getElementById('activeUsers').textContent = activeUsers;
+            document.getElementById('adminUsers').textContent = adminUsers;
+            document.getElementById('staffUsers').textContent = staffUsers;
+        }
+
+        // Render users table
+        function renderUsersTable(users) {
+            const tbody = document.getElementById('usersTableBody');
+
+            if (users.length === 0) {
+                tbody.innerHTML = `
+                    <tr><td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                        No users found
+                    </td></tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div class="user-avatar" style="width: 2.5rem; height: 2.5rem; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); font-weight: 600;">
+                                ${user.full_name ? user.full_name.charAt(0).toUpperCase() : 'U'}
+                            </div>
+                            <span style="font-weight: 500;">${user.full_name || 'No name'}</span>
+                        </div>
+                    </td>
+                    <td>${user.email}</td>
+                    <td>
+                        <span class="badge badge-${user.role === 'admin' ? 'success' : 'info'}">
+                            ${user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Staff'}
+                        </span>
+                    </td>
+                    <td>${formatDateReadable(user.created_at)}</td>
+                    <td>
+                        <span class="badge badge-${user.status === 'active' ? 'success' : 'warning'}">
+                            ${user.status ? user.status.charAt(0).toUpperCase() + user.status.slice(1) : 'Active'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-secondary" onclick="window.editUserRole('${user.id}')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1rem; height: 1rem;">
+                                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                            Edit Role
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Edit user role
+        window.editUserRole = function(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+
+            currentEditUser = user;
+            document.getElementById('modalUserName').textContent = user.full_name || 'No name';
+            document.getElementById('modalUserEmail').textContent = user.email;
+            document.getElementById('roleSelect').value = user.role || 'staff';
+            
+            document.getElementById('editRoleModal').classList.add('show');
+        };
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filtered = allUsers.filter(user => 
+                    (user.full_name && user.full_name.toLowerCase().includes(searchTerm)) ||
+                    (user.email && user.email.toLowerCase().includes(searchTerm))
+                );
+                renderUsersTable(filtered);
+            });
+
+            // Refresh
+            document.getElementById('refreshBtn').addEventListener('click', loadUsers);
+
+            // Export CSV
+            document.getElementById('exportUsersBtn').addEventListener('click', exportToCSV);
+
+            // Modal controls
+            document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+            document.getElementById('cancelModalBtn').addEventListener('click', closeModal);
+            document.getElementById('editRoleForm').addEventListener('submit', handleRoleUpdate);
+
+            // Close modal on outside click
+            document.getElementById('editRoleModal').addEventListener('click', (e) => {
+                if (e.target.id === 'editRoleModal') {
+                    closeModal();
+                }
+            });
+
+            // User menu
+            document.getElementById('userMenuBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.getElementById('userMenu').classList.toggle('show');
+            });
+
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                try {
+                    const { signOut } = await import('../../js/auth.js');
+                    await signOut();
+                } catch (error) {
+                    showToast('Logout failed', 'danger');
+                }
+            });
+
+            // Mobile menu
+            document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {
+                document.getElementById('navMenu').classList.toggle('show');
+            });
+
+            // Close menus on outside click
+            document.addEventListener('click', () => {
+                document.getElementById('userMenu').classList.remove('show');
+            });
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('editRoleModal').classList.remove('show');
+            currentEditUser = null;
+        }
+
+        // Handle role update
+        async function handleRoleUpdate(e) {
+            e.preventDefault();
+
+            if (!currentEditUser) return;
+
+            const saveBtn = document.getElementById('saveRoleBtn');
+            const originalText = saveBtn.innerHTML;
+
+            try {
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin"><circle cx="12" cy="12" r="10"/></svg> Saving...';
+
+                const newRole = document.getElementById('roleSelect').value;
+
+                const { error } = await supabase
+                    .from('users')
+                    .update({ 
+                        role: newRole,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', currentEditUser.id);
+
+                if (error) throw error;
+
+                showToast('User role updated successfully!', 'success');
+                closeModal();
+                await loadUsers();
+
+            } catch (error) {
+                console.error('Error updating role:', error);
+                showToast(error.message || 'Failed to update user role', 'danger');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalText;
+            }
+        }
+
+        // Export to CSV
+        function exportToCSV() {
+            try {
+                const headers = ['Full Name', 'Email', 'Role', 'Status', 'Created At'];
+                const rows = allUsers.map(user => [
+                    user.full_name || 'N/A',
+                    user.email || 'N/A',
+                    user.role || 'staff',
+                    user.status || 'active',
+                    formatDateReadable(user.created_at)
+                ]);
+
+                let csv = headers.join(',') + '\n';
+                rows.forEach(row => {
+                    csv += row.map(cell => `"${cell}"`).join(',') + '\n';
+                });
+
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `users_${new Date().toISOString().split('T')[0]}.csv`;
+                a.click();
+                window.URL.revokeObjectURL(url);
+
+                showToast('Users exported successfully!', 'success');
+
+            } catch (error) {
+                console.error('Export error:', error);
+                showToast('Failed to export users', 'danger');
+            }
+        }
+
+        // Initialize app
+        init();
+    </script>
+
+    <style>
+        .spin {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</body>
+</html>

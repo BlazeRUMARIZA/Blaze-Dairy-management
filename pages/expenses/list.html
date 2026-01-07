@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expenses - Blaze Dairy Management</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/pages/stats.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/></svg>
+                <span class="brand-name">Blaze Dairy</span>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn"><span></span><span></span><span></span></button>
+            <div class="nav-menu" id="navMenu">
+                <a href="../../index.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    Dashboard
+                </a>
+                <a href="../animals/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.84 4.84l-4.24 4.24M23 12h-6m-6 0H1"/></svg>
+                    Livestock
+                </a>
+                <a href="../production/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 7h20M2 17h20"/></svg>
+                    Production
+                </a>
+                <a href="../feed/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 3h-8v4h8V3z"/></svg>
+                    Feed
+                </a>
+                <a href="../health/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    Health
+                </a>
+                <a href="../sales/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    Sales
+                </a>
+                <a href="list.html" class="nav-link active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Expenses
+                </a>
+                <a href="../inventory/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    Inventory
+                </a>
+                <a href="../tasks/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    Tasks
+                </a>
+            </div>
+            <div class="nav-user">
+                <button class="user-menu-btn" id="userMenuBtn">
+                    <span class="user-avatar" id="userAvatar">A</span>
+                    <span class="user-name" id="userName">Admin</span>
+                </button>
+                <div class="user-menu" id="userMenu">
+                    <a href="../settings/profile.html" class="user-menu-item">Profile</a>
+                    <a href="../settings/settings.html" class="user-menu-item">Settings</a>
+                    <hr class="menu-divider">
+                    <button class="user-menu-item" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">Expenses</h1>
+                    <p class="page-subtitle">Track farm expenses and operational costs</p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-secondary" id="exportBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-5l5-5m0 0l5 5m-5-5v12"/></svg>
+                        Export
+                    </button>
+                    <a href="add.html" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7h14"/></svg>
+                        Add Expense
+                    </a>
+                </div>
+            </header>
+
+            <!-- Stats -->
+            <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--spacing-lg); margin-bottom: var(--spacing-xl);">
+                <div class="stat-card">
+                    <div class="stat-label">Total Expenses</div>
+                    <div class="stat-value" id="totalExpenses">$0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">This Month</div>
+                    <div class="stat-value" id="monthExpenses">$0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">By Category</div>
+                    <div class="stat-value" id="topCategory">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Pending</div>
+                    <div class="stat-value" id="pendingExpenses">$0</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card" style="margin-bottom: var(--spacing-lg);">
+                <div class="card-body">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md);">
+                        <div class="form-group" style="margin: 0;">
+                            <label class="form-label">Date From</label>
+                            <input type="date" id="dateFromFilter" class="form-input">
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label class="form-label">Date To</label>
+                            <input type="date" id="dateToFilter" class="form-input">
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label class="form-label">Category</label>
+                            <select id="categoryFilter" class="form-select">
+                                <option value="">All Categories</option>
+                                <option value="feed">Feed</option>
+                                <option value="veterinary">Veterinary</option>
+                                <option value="utilities">Utilities</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="labor">Labor</option>
+                                <option value="supplies">Supplies</option>
+                                <option value="transport">Transport</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="card">
+                <div class="card-body">
+                    <div id="loadingState" class="loading-state">
+                        <div class="spinner"></div>
+                        <p>Loading expenses...</p>
+                    </div>
+
+                    <div id="emptyState" class="empty-state" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        <h3>No expenses yet</h3>
+                        <p>Start tracking farm expenses</p>
+                        <a href="add.html" class="btn btn-primary" style="margin-top: var(--spacing-md);">Add Expense</a>
+                    </div>
+
+                    <div id="tableContainer" style="display: none;">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Category</th>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                        <th>Paid By</th>
+                                        <th>Receipt #</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="expensesTableBody"></tbody>
+                            </table>
+                        </div>
+                        <div id="paginationContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { supabase } from '../../js/supabase-client.js';
+        import { requireAuth } from '../../js/auth.js';
+        import { formatDate, formatCurrency, showToast, downloadCSV, debounce } from '../../js/utils.js';
+        import { Pagination } from '../../js/app.js';
+
+        await requireAuth();
+
+        let allExpenses = [];
+        let filteredExpenses = [];
+        const itemsPerPage = 15;
+        let pagination;
+
+        async function init() {
+            await loadExpenses();
+            setupEventListeners();
+        }
+
+        async function loadExpenses() {
+            try {
+                document.getElementById('loadingState').style.display = 'flex';
+
+                const { data, error } = await supabase
+                    .from('expenses')
+                    .select('*')
+                    .order('expense_date', { ascending: false });
+
+                if (error) throw error;
+                allExpenses = data || [];
+                updateStats();
+                applyFilters();
+            } catch (error) {
+                console.error('Error loading expenses:', error);
+                showToast('Failed to load expenses', 'error');
+            } finally {
+                document.getElementById('loadingState').style.display = 'none';
+            }
+        }
+
+        function updateStats() {
+            const totalExpenses = allExpenses.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+            document.getElementById('totalExpenses').textContent = formatCurrency(totalExpenses);
+
+            const monthStart = new Date();
+            monthStart.setDate(1);
+            const monthStartStr = monthStart.toISOString().split('T')[0];
+            const monthExpenses = allExpenses.filter(e => e.expense_date >= monthStartStr);
+            const monthTotal = monthExpenses.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+            document.getElementById('monthExpenses').textContent = formatCurrency(monthTotal);
+
+            // Get top category by amount
+            const categoryTotals = {};
+            monthExpenses.forEach(e => {
+                const cat = e.category || 'other';
+                categoryTotals[cat] = (categoryTotals[cat] || 0) + parseFloat(e.amount || 0);
+            });
+            const topCat = Object.keys(categoryTotals).reduce((a, b) => 
+                categoryTotals[a] > categoryTotals[b] ? a : b, 'none');
+            document.getElementById('topCategory').textContent = topCat !== 'none' ? 
+                topCat.charAt(0).toUpperCase() + topCat.slice(1) : '--';
+
+            const pending = allExpenses.filter(e => e.status === 'pending');
+            const pendingTotal = pending.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+            document.getElementById('pendingExpenses').textContent = formatCurrency(pendingTotal);
+        }
+
+        function applyFilters() {
+            const dateFrom = document.getElementById('dateFromFilter').value;
+            const dateTo = document.getElementById('dateToFilter').value;
+            const category = document.getElementById('categoryFilter').value;
+
+            filteredExpenses = allExpenses.filter(expense => {
+                const matchesDateFrom = !dateFrom || expense.expense_date >= dateFrom;
+                const matchesDateTo = !dateTo || expense.expense_date <= dateTo;
+                const matchesCategory = !category || expense.category === category;
+
+                return matchesDateFrom && matchesDateTo && matchesCategory;
+            });
+
+            renderTable();
+        }
+
+        function renderTable() {
+            if (filteredExpenses.length === 0) {
+                document.getElementById('emptyState').style.display = 'flex';
+                document.getElementById('tableContainer').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('tableContainer').style.display = 'block';
+
+            if (!pagination) {
+                pagination = new Pagination('paginationContainer', filteredExpenses.length, itemsPerPage, renderPage);
+            } else {
+                pagination.updateTotalItems(filteredExpenses.length);
+            }
+            renderPage(1);
+        }
+
+        function renderPage(page) {
+            const start = (page - 1) * itemsPerPage;
+            const pageExpenses = filteredExpenses.slice(start, start + itemsPerPage);
+
+            document.getElementById('expensesTableBody').innerHTML = pageExpenses.map(expense => `
+                <tr>
+                    <td>${formatDate(expense.expense_date)}</td>
+                    <td><span class="badge badge-${getCategoryColor(expense.category)}">${expense.category || 'other'}</span></td>
+                    <td>${expense.description || '--'}</td>
+                    <td><strong>${formatCurrency(expense.amount)}</strong></td>
+                    <td>${expense.paid_by || '--'}</td>
+                    <td>${expense.receipt_number || '--'}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-ghost" onclick="editExpense('${expense.id}')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </button>
+                            <button class="btn btn-sm btn-ghost text-danger" onclick="deleteExpense('${expense.id}')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getCategoryColor(category) {
+            const colors = {
+                feed: 'primary', veterinary: 'danger', utilities: 'info',
+                maintenance: 'warning', labor: 'success', supplies: 'secondary',
+                transport: 'info', other: 'secondary'
+            };
+            return colors[category] || 'secondary';
+        }
+
+        window.editExpense = (id) => window.location.href = `edit.html?id=${id}`;
+        
+        window.deleteExpense = async (id) => {
+            if (!confirm('Delete this expense?')) return;
+            try {
+                const { error } = await supabase.from('expenses').delete().eq('id', id);
+                if (error) throw error;
+                showToast('Expense deleted', 'success');
+                await loadExpenses();
+            } catch (error) {
+                showToast('Failed to delete expense', 'error');
+            }
+        };
+
+        function setupEventListeners() {
+            document.getElementById('dateFromFilter').addEventListener('change', applyFilters);
+            document.getElementById('dateToFilter').addEventListener('change', applyFilters);
+            document.getElementById('categoryFilter').addEventListener('change', applyFilters);
+
+            document.getElementById('exportBtn').addEventListener('click', () => {
+                const exportData = filteredExpenses.map(e => ({
+                    Date: e.expense_date,
+                    Category: e.category || '',
+                    Description: e.description || '',
+                    Amount: e.amount || '',
+                    'Paid By': e.paid_by || '',
+                    'Receipt #': e.receipt_number || ''
+                }));
+                downloadCSV(exportData, 'expenses.csv');
+            });
+        }
+
+        init();
+    </script>
+    <script src="../../js/user-menu.js"></script>
+    <script type="module" src="../../js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Dropdown</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h2>Dropdown Test</h2>
+            </div>
+            
+            <div class="nav-user">
+                <button class="user-menu-btn" id="userMenuBtn">
+                    <span class="user-avatar" id="userAvatar">A</span>
+                    <span class="user-name" id="userName">Test User</span>
+                </button>
+                <div class="user-menu" id="userMenu">
+                    <a href="#profile" class="user-menu-item">Profile</a>
+                    <a href="#settings" class="user-menu-item">Settings</a>
+                    <hr class="menu-divider">
+                    <button class="user-menu-item" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <h1>Dropdown Test Page</h1>
+            <p>Click on "Test User" in the top right to test the dropdown menu.</p>
+            <div id="status" style="margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 8px;">
+                <strong>Status:</strong> <span id="statusText">Ready</span>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        console.log('Test page loaded');
+        
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        const userMenu = document.getElementById('userMenu');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const statusText = document.getElementById('statusText');
+        
+        console.log('Elements found:', { userMenuBtn, userMenu, logoutBtn });
+        statusText.textContent = 'Elements found, setting up listeners...';
+        
+        if (userMenuBtn && userMenu) {
+            userMenuBtn.addEventListener('click', (e) => {
+                console.log('Button clicked!');
+                e.stopPropagation();
+                e.preventDefault();
+                
+                const isActive = userMenu.classList.toggle('active');
+                console.log('Menu toggled, active:', isActive);
+                statusText.textContent = `Menu is now ${isActive ? 'OPEN' : 'CLOSED'}`;
+                
+                if (isActive) {
+                    userMenuBtn.classList.add('active');
+                } else {
+                    userMenuBtn.classList.remove('active');
+                }
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!userMenu.contains(e.target) && !userMenuBtn.contains(e.target)) {
+                    console.log('Clicked outside, closing menu');
+                    userMenu.classList.remove('active');
+                    userMenuBtn.classList.remove('active');
+                    statusText.textContent = 'Menu closed (clicked outside)';
+                }
+            });
+            
+            userMenu.addEventListener('click', (e) => {
+                e.stopPropagation();
+                console.log('Clicked inside menu');
+            });
+            
+            statusText.textContent = 'Listeners attached. Click the user name!';
+            console.log('Event listeners attached successfully');
+        } else {
+            statusText.textContent = 'ERROR: Elements not found!';
+            console.error('Elements not found!');
+        }
+        
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                alert('Logout clicked!');
+                statusText.textContent = 'Logout clicked!';
+            });
+        }
+    </script>
+</body>
+</html>

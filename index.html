@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Blaze Dairy Management - Modern farm management solution">
+    <title>Dashboard - Blaze Dairy Management</title>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages/dashboard.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/>
+                </svg>
+                <span class="brand-name">Blaze Dairy</span>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <div class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    Dashboard
+                </a>
+                <a href="pages/animals/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.84 4.84l-4.24 4.24M23 12h-6m-6 0H1"/></svg>
+                    Livestock
+                </a>
+                <a href="pages/production/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v20M2 7h20M2 17h20"/></svg>
+                    Production
+                </a>
+                <a href="pages/feed/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 3h-8v4h8V3z"/></svg>
+                    Feed
+                </a>
+                <a href="pages/health/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    Health
+                </a>
+                <a href="pages/sales/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    Sales
+                </a>
+                <a href="pages/expenses/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Expenses
+                </a>
+                <a href="pages/inventory/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    Inventory
+                </a>
+                <a href="pages/tasks/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    Tasks
+                </a>
+            </div>
+            
+            <div class="nav-user">
+                <button class="user-menu-btn" id="userMenuBtn">
+                    <span class="user-avatar" id="userAvatar">A</span>
+                    <span class="user-name" id="userName">Admin</span>
+                </button>
+                <div class="user-menu" id="userMenu">
+                    <a href="pages/settings/profile.html" class="user-menu-item">Profile</a>
+                    <a href="pages/settings/settings.html" class="user-menu-item">Settings</a>
+                    <hr class="menu-divider">
+                    <button class="user-menu-item" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">Welcome back! Here's what's happening on your farm.</p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-secondary" id="refreshBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+                        Refresh
+                    </button>
+                </div>
+            </header>
+
+            <!-- Alerts -->
+            <div class="alerts-container" id="alertsContainer"></div>
+
+            <!-- KPI Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: #dbeafe; color: #3b82f6;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v20M2 7h20M2 17h20"/></svg>
+                    </div>
+                    <div class="kpi-content">
+                        <p class="kpi-label">Today's Production</p>
+                        <p class="kpi-value" id="todayProduction">0 L</p>
+                        <p class="kpi-change positive" id="productionChange">+0%</p>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: #ddd6fe; color: #8b5cf6;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.84 4.84l-4.24 4.24M23 12h-6m-6 0H1"/></svg>
+                    </div>
+                    <div class="kpi-content">
+                        <p class="kpi-label">Active Animals</p>
+                        <p class="kpi-value" id="activeAnimals">0</p>
+                        <p class="kpi-change" id="animalsChange">--</p>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: #d1fae5; color: #10b981;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    </div>
+                    <div class="kpi-content">
+                        <p class="kpi-label">MTD Revenue</p>
+                        <p class="kpi-value" id="mtdRevenue">$0</p>
+                        <p class="kpi-change positive" id="revenueChange">+0%</p>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: #fef3c7; color: #f59e0b;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </div>
+                    <div class="kpi-content">
+                        <p class="kpi-label">Health Events</p>
+                        <p class="kpi-value" id="healthEvents">0</p>
+                        <p class="kpi-change" id="healthChange">This week</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-row">
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Milk Production Trend</h2>
+                        <select class="chart-period-select" id="productionPeriod">
+                            <option value="7">Last 7 days</option>
+                            <option value="30">Last 30 days</option>
+                            <option value="90">Last 90 days</option>
+                        </select>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="productionChart" height="80"></canvas>
+                    </div>
+                </div>
+
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Revenue vs Expenses</h2>
+                        <select class="chart-period-select" id="financePeriod">
+                            <option value="7">Last 7 days</option>
+                            <option value="30">Last 30 days</option>
+                            <option value="90">Last 90 days</option>
+                        </select>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="financeChart" height="80"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity and Alerts -->
+            <div class="content-row">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Recent Activity</h2>
+                        <a href="pages/tasks/list.html" class="card-link">View all</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-list" id="activityList">
+                            <div class="empty-state">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                <p>No recent activity</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Quick Actions</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="quick-actions">
+                            <a href="pages/production/add.html" class="quick-action-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14m-7-7h14"/></svg>
+                                Add Production
+                            </a>
+                            <a href="pages/animals/add.html" class="quick-action-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14m-7-7h14"/></svg>
+                                Register Animal
+                            </a>
+                            <a href="pages/health/add.html" class="quick-action-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14m-7-7h14"/></svg>
+                                Record Health
+                            </a>
+                            <a href="pages/feed/add-log.html" class="quick-action-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14m-7-7h14"/></svg>
+                                Log Feed
+                            </a>
+                            <a href="pages/sales/add.html" class="quick-action-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14m-7-7h14"/></svg>
+                                Add Sale
+                            </a>
+                            <a href="pages/expenses/add.html" class="quick-action-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14m-7-7h14"/></svg>
+                                Add Expense
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- User Menu Script (runs immediately) -->
+    <script src="js/user-menu.js"></script>
+
+    <!-- Scripts -->
+    <script type="module" src="js/supabase-client.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/utils.js"></script>
+    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/modules/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks - Blaze Dairy Management</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/pages/stats.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/></svg>
+                <span class="brand-name">Blaze Dairy</span>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn"><span></span><span></span><span></span></button>
+            <div class="nav-menu" id="navMenu">
+                <a href="../../index.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    Dashboard
+                </a>
+                <a href="../animals/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.84 4.84l-4.24 4.24M23 12h-6m-6 0H1"/></svg>
+                    Livestock
+                </a>
+                <a href="../production/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 7h20M2 17h20"/></svg>
+                    Production
+                </a>
+                <a href="../feed/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 3h-8v4h8V3z"/></svg>
+                    Feed
+                </a>
+                <a href="../health/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    Health
+                </a>
+                <a href="../sales/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    Sales
+                </a>
+                <a href="../expenses/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Expenses
+                </a>
+                <a href="../inventory/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    Inventory
+                </a>
+                <a href="list.html" class="nav-link active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    Tasks
+                </a>
+            </div>
+            <div class="nav-user">
+                <button class="user-menu-btn" id="userMenuBtn">
+                    <span class="user-avatar" id="userAvatar">A</span>
+                    <span class="user-name" id="userName">Admin</span>
+                </button>
+                <div class="user-menu" id="userMenu">
+                    <a href="../settings/profile.html" class="user-menu-item">Profile</a>
+                    <a href="../settings/settings.html" class="user-menu-item">Settings</a>
+                    <hr class="menu-divider">
+                    <button class="user-menu-item" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">Tasks</h1>
+                    <p class="page-subtitle">Manage farm tasks and assignments</p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-secondary" id="exportBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-5l5-5m0 0l5 5m-5-5v12"/></svg>
+                        Export
+                    </button>
+                    <a href="add.html" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7h14"/></svg>
+                        Add Task
+                    </a>
+                </div>
+            </header>
+
+            <!-- Stats -->
+            <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--spacing-lg); margin-bottom: var(--spacing-xl);">
+                <div class="stat-card">
+                    <div class="stat-label">Total Tasks</div>
+                    <div class="stat-value" id="totalTasks">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Pending</div>
+                    <div class="stat-value text-warning" id="pendingTasks">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Overdue</div>
+                    <div class="stat-value text-danger" id="overdueTasks">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Completed This Week</div>
+                    <div class="stat-value text-success" id="completedWeek">0</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card" style="margin-bottom: var(--spacing-lg);">
+                <div class="card-body">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md);">
+                        <div class="form-group" style="margin: 0;">
+                            <label class="form-label">Status</label>
+                            <select id="statusFilter" class="form-select">
+                                <option value="">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="in_progress">In Progress</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label class="form-label">Priority</label>
+                            <select id="priorityFilter" class="form-select">
+                                <option value="">All Priorities</option>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label class="form-label">Assigned To</label>
+                            <select id="assignedFilter" class="form-select">
+                                <option value="">All Assignees</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="card">
+                <div class="card-body">
+                    <div id="loadingState" class="loading-state">
+                        <div class="spinner"></div>
+                        <p>Loading tasks...</p>
+                    </div>
+
+                    <div id="emptyState" class="empty-state" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                        <h3>No tasks yet</h3>
+                        <p>Start managing your farm tasks</p>
+                        <a href="add.html" class="btn btn-primary" style="margin-top: var(--spacing-md);">Add Task</a>
+                    </div>
+
+                    <div id="tableContainer" style="display: none;">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Due Date</th>
+                                        <th>Assigned To</th>
+                                        <th>Progress</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tasksTableBody"></tbody>
+                            </table>
+                        </div>
+                        <div id="paginationContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { supabase } from '../../js/supabase-client.js';
+        import { requireAuth } from '../../js/auth.js';
+        import { formatDate, showToast, downloadCSV, debounce } from '../../js/utils.js';
+        import { Pagination } from '../../js/app.js';
+
+        await requireAuth();
+
+        let allTasks = [];
+        let filteredTasks = [];
+        let assignees = new Set();
+        const itemsPerPage = 15;
+        let pagination;
+
+        async function init() {
+            await loadTasks();
+            setupEventListeners();
+        }
+
+        async function loadTasks() {
+            try {
+                document.getElementById('loadingState').style.display = 'flex';
+
+                const { data, error } = await supabase
+                    .from('tasks')
+                    .select('*')
+                    .order('due_date', { ascending: true });
+
+                if (error) throw error;
+                allTasks = data || [];
+                
+                // Extract unique assignees
+                assignees = new Set(allTasks.map(t => t.assigned_to).filter(Boolean));
+                populateAssignedFilter();
+                
+                updateStats();
+                applyFilters();
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                showToast('Failed to load tasks', 'error');
+            } finally {
+                document.getElementById('loadingState').style.display = 'none';
+            }
+        }
+
+        function populateAssignedFilter() {
+            const select = document.getElementById('assignedFilter');
+            Array.from(assignees).sort().forEach(assignee => {
+                const option = document.createElement('option');
+                option.value = assignee;
+                option.textContent = assignee;
+                select.appendChild(option);
+            });
+        }
+
+        function updateStats() {
+            document.getElementById('totalTasks').textContent = allTasks.length;
+
+            const pending = allTasks.filter(t => t.status === 'pending').length;
+            document.getElementById('pendingTasks').textContent = pending;
+
+            const today = new Date().toISOString().split('T')[0];
+            const overdue = allTasks.filter(t => 
+                t.due_date && t.due_date < today && t.status !== 'completed' && t.status !== 'cancelled'
+            ).length;
+            document.getElementById('overdueTasks').textContent = overdue;
+
+            // Week start (Monday)
+            const weekStart = new Date();
+            weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1);
+            const weekStartStr = weekStart.toISOString().split('T')[0];
+            const completedWeek = allTasks.filter(t => 
+                t.status === 'completed' && t.updated_at && t.updated_at >= weekStartStr
+            ).length;
+            document.getElementById('completedWeek').textContent = completedWeek;
+        }
+
+        function applyFilters() {
+            const status = document.getElementById('statusFilter').value;
+            const priority = document.getElementById('priorityFilter').value;
+            const assigned = document.getElementById('assignedFilter').value;
+
+            filteredTasks = allTasks.filter(task => {
+                const matchesStatus = !status || task.status === status;
+                const matchesPriority = !priority || task.priority === priority;
+                const matchesAssigned = !assigned || task.assigned_to === assigned;
+
+                return matchesStatus && matchesPriority && matchesAssigned;
+            });
+
+            renderTable();
+        }
+
+        function renderTable() {
+            if (filteredTasks.length === 0) {
+                document.getElementById('emptyState').style.display = 'flex';
+                document.getElementById('tableContainer').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('tableContainer').style.display = 'block';
+
+            if (!pagination) {
+                pagination = new Pagination('paginationContainer', filteredTasks.length, itemsPerPage, renderPage);
+            } else {
+                pagination.updateTotalItems(filteredTasks.length);
+            }
+            renderPage(1);
+        }
+
+        function renderPage(page) {
+            const start = (page - 1) * itemsPerPage;
+            const pageTasks = filteredTasks.slice(start, start + itemsPerPage);
+            const today = new Date().toISOString().split('T')[0];
+
+            document.getElementById('tasksTableBody').innerHTML = pageTasks.map(task => {
+                const isOverdue = task.due_date && task.due_date < today && 
+                    task.status !== 'completed' && task.status !== 'cancelled';
+                const progress = parseInt(task.progress) || 0;
+
+                return `
+                    <tr ${isOverdue ? 'style="background: rgba(239, 68, 68, 0.05);"' : ''}>
+                        <td><strong>${task.title}</strong></td>
+                        <td><span class="badge badge-${getPriorityColor(task.priority)}">${task.priority || 'medium'}</span></td>
+                        <td><span class="badge badge-${getStatusColor(task.status)}">${task.status || 'pending'}</span></td>
+                        <td>${task.due_date ? formatDate(task.due_date) : '--'}${isOverdue ? ' <span class="text-danger">⚠</span>' : ''}</td>
+                        <td>${task.assigned_to || '--'}</td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="flex: 1; background: #e5e7eb; border-radius: 4px; height: 8px; overflow: hidden;">
+                                    <div style="background: ${getProgressColor(progress)}; height: 100%; width: ${progress}%;"></div>
+                                </div>
+                                <span style="font-size: 0.875rem; color: #6b7280;">${progress}%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-ghost" onclick="editTask('${task.id}')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                </button>
+                                <button class="btn btn-sm btn-ghost text-danger" onclick="deleteTask('${task.id}')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function getPriorityColor(priority) {
+            const colors = { low: 'secondary', medium: 'warning', high: 'danger' };
+            return colors[priority] || 'secondary';
+        }
+
+        function getStatusColor(status) {
+            const colors = { 
+                pending: 'warning', 
+                in_progress: 'info', 
+                completed: 'success', 
+                cancelled: 'secondary' 
+            };
+            return colors[status] || 'secondary';
+        }
+
+        function getProgressColor(progress) {
+            if (progress >= 75) return '#10b981';
+            if (progress >= 50) return '#3b82f6';
+            if (progress >= 25) return '#f59e0b';
+            return '#ef4444';
+        }
+
+        window.editTask = (id) => window.location.href = `edit.html?id=${id}`;
+        
+        window.deleteTask = async (id) => {
+            if (!confirm('Delete this task?')) return;
+            try {
+                const { error } = await supabase.from('tasks').delete().eq('id', id);
+                if (error) throw error;
+                showToast('Task deleted', 'success');
+                await loadTasks();
+            } catch (error) {
+                showToast('Failed to delete task', 'error');
+            }
+        };
+
+        function setupEventListeners() {
+            document.getElementById('statusFilter').addEventListener('change', applyFilters);
+            document.getElementById('priorityFilter').addEventListener('change', applyFilters);
+            document.getElementById('assignedFilter').addEventListener('change', applyFilters);
+
+            document.getElementById('exportBtn').addEventListener('click', () => {
+                const exportData = filteredTasks.map(t => ({
+                    Title: t.title,
+                    Priority: t.priority || '',
+                    Status: t.status || '',
+                    'Due Date': t.due_date || '',
+                    'Assigned To': t.assigned_to || '',
+                    'Progress': `${t.progress || 0}%`,
+                    Description: t.description || ''
+                }));
+                downloadCSV(exportData, 'tasks.csv');
+            });
+        }
+
+        init();
+    </script>
+    <script src="../../js/user-menu.js"></script>
+    <script type="module" src="../../js/app.js"></script>
+</body>
+</html>

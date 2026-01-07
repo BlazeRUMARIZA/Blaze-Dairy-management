@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Animal - Blaze Dairy Management</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/></svg>
+                <span class="brand-name">Blaze Dairy</span>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="nav-menu" id="navMenu">
+                <a href="../../index.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    Dashboard
+                </a>
+                <a href="list.html" class="nav-link active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.84 4.84l-4.24 4.24M23 12h-6m-6 0H1"/></svg>
+                    Livestock
+                </a>
+                <a href="../production/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 7h20M2 17h20"/></svg>
+                    Production
+                </a>
+                <a href="../feed/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 3h-8v4h8V3z"/></svg>
+                    Feed
+                </a>
+                <a href="../health/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    Health
+                </a>
+                <a href="../sales/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    Sales
+                </a>
+                <a href="../expenses/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Expenses
+                </a>
+                <a href="../inventory/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    Inventory
+                </a>
+                <a href="../tasks/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    Tasks
+                </a>
+            </div>
+            <div class="nav-user">
+                <button class="user-menu-btn" id="userMenuBtn">
+                    <span class="user-avatar" id="userAvatar">A</span>
+                    <span class="user-name" id="userName">Admin</span>
+                </button>
+                <div class="user-menu" id="userMenu">
+                    <a href="../settings/profile.html" class="user-menu-item">Profile</a>
+                    <a href="../settings/settings.html" class="user-menu-item">Settings</a>
+                    <hr class="menu-divider">
+                    <button class="user-menu-item" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container" style="max-width: 800px;">
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">Edit Animal</h1>
+                    <p class="page-subtitle">Update livestock information</p>
+                </div>
+            </header>
+
+            <div class="card" id="loadingCard">
+                <div class="card-body" style="text-align: center; padding: 3rem;">
+                    <div class="spinner"></div>
+                    <p style="margin-top: 1rem; color: var(--text-secondary);">Loading animal data...</p>
+                </div>
+            </div>
+
+            <div class="card" id="formCard" style="display: none;">
+                <div class="card-body">
+                    <form id="animalForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="tag" class="form-label form-label-required">Tag/ID</label>
+                                <input type="text" id="tag" class="form-input" required placeholder="Unique identifier (e.g., A001)">
+                                <span class="form-error"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" id="name" class="form-input" placeholder="Optional name">
+                                <span class="form-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="breed" class="form-label form-label-required">Breed</label>
+                                <input type="text" id="breed" class="form-input" required placeholder="e.g., Holstein, Jersey">
+                                <span class="form-error"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sex" class="form-label form-label-required">Sex</label>
+                                <select id="sex" class="form-select" required>
+                                    <option value="">Select Sex</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                                <span class="form-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="date_of_birth" class="form-label form-label-required">Date of Birth</label>
+                                <input type="date" id="date_of_birth" class="form-input" required>
+                                <span class="form-error"></span>
+                                <small class="form-help" id="ageDisplay"></small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="acquisition_date" class="form-label form-label-required">Acquisition Date</label>
+                                <input type="date" id="acquisition_date" class="form-input" required>
+                                <span class="form-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="acquisition_cost" class="form-label">Acquisition Cost</label>
+                                <input type="number" id="acquisition_cost" class="form-input" step="0.01" min="0" placeholder="0.00">
+                                <span class="form-error"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="status" class="form-label">Status</label>
+                                <select id="status" class="form-select">
+                                    <option value="active">Active</option>
+                                    <option value="sold">Sold</option>
+                                    <option value="deceased">Deceased</option>
+                                    <option value="transferred">Transferred</option>
+                                </select>
+                                <span class="form-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dam_tag" class="form-label">Dam Tag</label>
+                                <input type="text" id="dam_tag" class="form-input" placeholder="Mother's tag">
+                                <span class="form-error"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sire_tag" class="form-label">Sire Tag</label>
+                                <input type="text" id="sire_tag" class="form-input" placeholder="Father's tag">
+                                <span class="form-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes" class="form-label">Notes</label>
+                            <textarea id="notes" class="form-textarea" rows="3" placeholder="Any additional information..."></textarea>
+                            <span class="form-error"></span>
+                        </div>
+
+                        <div class="form-actions">
+                            <a href="list.html" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <span>Update Animal</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { supabase } from '../../js/supabase-client.js';
+        import { requireAuth, getCurrentUser } from '../../js/auth.js';
+        import { showToast } from '../../js/utils.js';
+
+        await requireAuth();
+
+        let animalId = null;
+        let originalTag = null;
+
+        async function init() {
+            // Get animal ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            animalId = urlParams.get('id');
+
+            if (!animalId) {
+                showToast('No animal ID provided', 'error');
+                setTimeout(() => {
+                    window.location.href = 'list.html';
+                }, 1500);
+                return;
+            }
+
+            await loadAnimal();
+            setupAgeCalculation();
+            setupForm();
+        }
+
+        async function loadAnimal() {
+            try {
+                const { data, error } = await supabase
+                    .from('animals')
+                    .select('*')
+                    .eq('id', animalId)
+                    .single();
+
+                if (error) throw error;
+
+                if (!data) {
+                    showToast('Animal not found', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'list.html';
+                    }, 1500);
+                    return;
+                }
+
+                // Store original tag for validation
+                originalTag = data.tag;
+
+                // Populate form
+                document.getElementById('tag').value = data.tag || '';
+                document.getElementById('name').value = data.name || '';
+                document.getElementById('breed').value = data.breed || '';
+                document.getElementById('sex').value = data.sex || '';
+                document.getElementById('date_of_birth').value = data.date_of_birth || '';
+                document.getElementById('acquisition_date').value = data.acquisition_date || '';
+                document.getElementById('acquisition_cost').value = data.acquisition_cost || '';
+                document.getElementById('status').value = data.status || 'active';
+                document.getElementById('dam_tag').value = data.dam_tag || '';
+                document.getElementById('sire_tag').value = data.sire_tag || '';
+                document.getElementById('notes').value = data.notes || '';
+
+                // Calculate and display age
+                if (data.date_of_birth) {
+                    calculateAge(data.date_of_birth);
+                }
+
+                // Show form, hide loading
+                document.getElementById('loadingCard').style.display = 'none';
+                document.getElementById('formCard').style.display = 'block';
+
+            } catch (error) {
+                console.error('Error loading animal:', error);
+                showToast('Failed to load animal data', 'error');
+                setTimeout(() => {
+                    window.location.href = 'list.html';
+                }, 1500);
+            }
+        }
+
+        function calculateAge(birthDateString) {
+            const birthDate = new Date(birthDateString);
+            const today = new Date();
+            let years = today.getFullYear() - birthDate.getFullYear();
+            let months = today.getMonth() - birthDate.getMonth();
+            let days = today.getDate() - birthDate.getDate();
+
+            if (days < 0) {
+                months--;
+                days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+            }
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            let ageText = 'Age: ';
+            if (years > 0) ageText += `${years} year${years > 1 ? 's' : ''}`;
+            if (months > 0) {
+                if (years > 0) ageText += ', ';
+                ageText += `${months} month${months > 1 ? 's' : ''}`;
+            }
+            if (years === 0 && months === 0) {
+                ageText += `${days} day${days !== 1 ? 's' : ''}`;
+            }
+
+            document.getElementById('ageDisplay').textContent = ageText;
+        }
+
+        function setupAgeCalculation() {
+            const dateOfBirthInput = document.getElementById('date_of_birth');
+
+            dateOfBirthInput.addEventListener('change', () => {
+                const birthDateString = dateOfBirthInput.value;
+                if (birthDateString) {
+                    calculateAge(birthDateString);
+                } else {
+                    document.getElementById('ageDisplay').textContent = '';
+                }
+            });
+        }
+
+        function setupForm() {
+            const form = document.getElementById('animalForm');
+            const submitBtn = document.getElementById('submitBtn');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                // Get form data
+                const formData = {
+                    tag: document.getElementById('tag').value.trim(),
+                    name: document.getElementById('name').value.trim() || null,
+                    breed: document.getElementById('breed').value.trim(),
+                    sex: document.getElementById('sex').value,
+                    date_of_birth: document.getElementById('date_of_birth').value,
+                    acquisition_date: document.getElementById('acquisition_date').value,
+                    acquisition_cost: document.getElementById('acquisition_cost').value ? parseFloat(document.getElementById('acquisition_cost').value) : null,
+                    status: document.getElementById('status').value,
+                    dam_tag: document.getElementById('dam_tag').value.trim() || null,
+                    sire_tag: document.getElementById('sire_tag').value.trim() || null,
+                    notes: document.getElementById('notes').value.trim() || null
+                };
+
+                // Validation
+                if (!formData.tag) {
+                    showToast('Tag/ID is required', 'error');
+                    return;
+                }
+
+                if (!formData.breed) {
+                    showToast('Breed is required', 'error');
+                    return;
+                }
+
+                if (!formData.sex) {
+                    showToast('Sex is required', 'error');
+                    return;
+                }
+
+                if (!formData.date_of_birth) {
+                    showToast('Date of birth is required', 'error');
+                    return;
+                }
+
+                if (!formData.acquisition_date) {
+                    showToast('Acquisition date is required', 'error');
+                    return;
+                }
+
+                // Date validation
+                const birthDate = new Date(formData.date_of_birth);
+                const acquisitionDate = new Date(formData.acquisition_date);
+                const today = new Date();
+
+                if (birthDate > today) {
+                    showToast('Date of birth cannot be in the future', 'error');
+                    return;
+                }
+
+                if (acquisitionDate > today) {
+                    showToast('Acquisition date cannot be in the future', 'error');
+                    return;
+                }
+
+                if (acquisitionDate < birthDate) {
+                    showToast('Acquisition date cannot be before date of birth', 'error');
+                    return;
+                }
+
+                // Disable button
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<div class="spinner spinner-sm"></div><span>Updating...</span>';
+
+                try {
+                    const user = await getCurrentUser();
+                    formData.updated_by = user.id;
+                    formData.updated_at = new Date().toISOString();
+
+                    const { error } = await supabase
+                        .from('animals')
+                        .update(formData)
+                        .eq('id', animalId);
+
+                    if (error) {
+                        if (error.code === '23505' && formData.tag !== originalTag) {
+                            throw new Error('Tag/ID already exists. Please use a unique identifier.');
+                        }
+                        throw error;
+                    }
+
+                    showToast('Animal updated successfully', 'success');
+                    
+                    // Redirect after short delay
+                    setTimeout(() => {
+                        window.location.href = 'list.html';
+                    }, 1000);
+
+                } catch (error) {
+                    console.error('Error updating animal:', error);
+                    showToast(error.message || 'Failed to update animal', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span>Update Animal</span>';
+                }
+            });
+        }
+
+        init();
+    </script>
+    <script src="../../js/user-menu.js"></script>
+    <script type="module" src="../../js/app.js"></script>
+</body>
+</html>

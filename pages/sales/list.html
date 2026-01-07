@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales - Blaze Dairy Management</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/pages/stats.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/></svg>
+                <span class="brand-name">Blaze Dairy</span>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn"><span></span><span></span><span></span></button>
+            <div class="nav-menu" id="navMenu">
+                <a href="../../index.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    Dashboard
+                </a>
+                <a href="../animals/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.84 4.84l-4.24 4.24M23 12h-6m-6 0H1"/></svg>
+                    Livestock
+                </a>
+                <a href="../production/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 7h20M2 17h20"/></svg>
+                    Production
+                </a>
+                <a href="../feed/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 3h-8v4h8V3z"/></svg>
+                    Feed
+                </a>
+                <a href="../health/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    Health
+                </a>
+                <a href="list.html" class="nav-link active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    Sales
+                </a>
+                <a href="../expenses/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Expenses
+                </a>
+                <a href="../inventory/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    Inventory
+                </a>
+                <a href="../tasks/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    Tasks
+                </a>
+            </div>
+            <div class="nav-user">
+                <button class="user-menu-btn" id="userMenuBtn">
+                    <span class="user-avatar" id="userAvatar">A</span>
+                    <span class="user-name" id="userName">Admin</span>
+                </button>
+                <div class="user-menu" id="userMenu">
+                    <a href="../settings/profile.html" class="user-menu-item">Profile</a>
+                    <a href="../settings/settings.html" class="user-menu-item">Settings</a>
+                    <hr class="menu-divider">
+                    <button class="user-menu-item" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">Sales</h1>
+                    <p class="page-subtitle">Track product sales and customer transactions</p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-secondary" id="exportBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-5l5-5m0 0l5 5m-5-5v12"/></svg>
+                        Export
+                    </button>
+                    <a href="add.html" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7h14"/></svg>
+                        Add Sale
+                    </a>
+                </div>
+            </header>
+
+            <!-- Stats -->
+            <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--spacing-lg); margin-bottom: var(--spacing-xl);">
+                <div class="stat-card">
+                    <div class="stat-label">Total Sales</div>
+                    <div class="stat-value" id="totalSales">$0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">This Month</div>
+                    <div class="stat-value" id="monthSales">$0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Pending Amount</div>
+                    <div class="stat-value" id="pendingAmount">$0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Customers</div>
+                    <div class="stat-value" id="customersCount">0</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card" style="margin-bottom: var(--spacing-lg);">
+                <div class="card-body">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md);">
+                        <div class="form-group" style="margin: 0;">
+                            <label class="form-label">Date From</label>
+                            <input type="date" id="dateFromFilter" class="form-input">
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label class="form-label">Date To</label>
+                            <input type="date" id="dateToFilter" class="form-input">
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label class="form-label">Customer</label>
+                            <select id="customerFilter" class="form-select">
+                                <option value="">All Customers</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label class="form-label">Status</label>
+                            <select id="statusFilter" class="form-select">
+                                <option value="">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="paid">Paid</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="card">
+                <div class="card-body">
+                    <div id="loadingState" class="loading-state">
+                        <div class="spinner"></div>
+                        <p>Loading sales...</p>
+                    </div>
+
+                    <div id="emptyState" class="empty-state" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                        <h3>No sales yet</h3>
+                        <p>Start recording your product sales</p>
+                        <a href="add.html" class="btn btn-primary" style="margin-top: var(--spacing-md);">Add Sale</a>
+                    </div>
+
+                    <div id="tableContainer" style="display: none;">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Customer</th>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Price</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="salesTableBody"></tbody>
+                            </table>
+                        </div>
+                        <div id="paginationContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { supabase } from '../../js/supabase-client.js';
+        import { requireAuth } from '../../js/auth.js';
+        import { formatDate, formatCurrency, formatNumber, showToast, downloadCSV, debounce } from '../../js/utils.js';
+        import { Pagination } from '../../js/app.js';
+
+        await requireAuth();
+
+        let allSales = [];
+        let filteredSales = [];
+        let customers = new Set();
+        const itemsPerPage = 15;
+        let pagination;
+
+        async function init() {
+            await loadSales();
+            setupEventListeners();
+        }
+
+        async function loadSales() {
+            try {
+                document.getElementById('loadingState').style.display = 'flex';
+
+                const { data, error } = await supabase
+                    .from('sales')
+                    .select('*')
+                    .order('sale_date', { ascending: false });
+
+                if (error) throw error;
+                allSales = data || [];
+                
+                // Extract unique customers
+                customers = new Set(allSales.map(s => s.customer_name).filter(Boolean));
+                populateCustomerFilter();
+                
+                updateStats();
+                applyFilters();
+            } catch (error) {
+                console.error('Error loading sales:', error);
+                showToast('Failed to load sales', 'error');
+            } finally {
+                document.getElementById('loadingState').style.display = 'none';
+            }
+        }
+
+        function populateCustomerFilter() {
+            const select = document.getElementById('customerFilter');
+            Array.from(customers).sort().forEach(customer => {
+                const option = document.createElement('option');
+                option.value = customer;
+                option.textContent = customer;
+                select.appendChild(option);
+            });
+        }
+
+        function updateStats() {
+            const totalSales = allSales.reduce((sum, s) => sum + (parseFloat(s.total_amount) || 0), 0);
+            document.getElementById('totalSales').textContent = formatCurrency(totalSales);
+
+            const monthStart = new Date();
+            monthStart.setDate(1);
+            const monthStartStr = monthStart.toISOString().split('T')[0];
+            const monthSales = allSales.filter(s => s.sale_date >= monthStartStr);
+            const monthTotal = monthSales.reduce((sum, s) => sum + (parseFloat(s.total_amount) || 0), 0);
+            document.getElementById('monthSales').textContent = formatCurrency(monthTotal);
+
+            const pending = allSales.filter(s => s.status === 'pending');
+            const pendingTotal = pending.reduce((sum, s) => sum + (parseFloat(s.total_amount) || 0), 0);
+            document.getElementById('pendingAmount').textContent = formatCurrency(pendingTotal);
+
+            document.getElementById('customersCount').textContent = customers.size;
+        }
+
+        function applyFilters() {
+            const dateFrom = document.getElementById('dateFromFilter').value;
+            const dateTo = document.getElementById('dateToFilter').value;
+            const customer = document.getElementById('customerFilter').value;
+            const status = document.getElementById('statusFilter').value;
+
+            filteredSales = allSales.filter(sale => {
+                const matchesDateFrom = !dateFrom || sale.sale_date >= dateFrom;
+                const matchesDateTo = !dateTo || sale.sale_date <= dateTo;
+                const matchesCustomer = !customer || sale.customer_name === customer;
+                const matchesStatus = !status || sale.status === status;
+
+                return matchesDateFrom && matchesDateTo && matchesCustomer && matchesStatus;
+            });
+
+            renderTable();
+        }
+
+        function renderTable() {
+            if (filteredSales.length === 0) {
+                document.getElementById('emptyState').style.display = 'flex';
+                document.getElementById('tableContainer').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('tableContainer').style.display = 'block';
+
+            if (!pagination) {
+                pagination = new Pagination('paginationContainer', filteredSales.length, itemsPerPage, renderPage);
+            } else {
+                pagination.updateTotalItems(filteredSales.length);
+            }
+            renderPage(1);
+        }
+
+        function renderPage(page) {
+            const start = (page - 1) * itemsPerPage;
+            const pageSales = filteredSales.slice(start, start + itemsPerPage);
+
+            document.getElementById('salesTableBody').innerHTML = pageSales.map(sale => `
+                <tr>
+                    <td>${formatDate(sale.sale_date)}</td>
+                    <td><strong>${sale.customer_name || '--'}</strong></td>
+                    <td>${sale.product_name || '--'}</td>
+                    <td>${formatNumber(sale.quantity)} ${sale.unit || ''}</td>
+                    <td>${formatCurrency(sale.unit_price)}</td>
+                    <td><strong>${formatCurrency(sale.total_amount)}</strong></td>
+                    <td><span class="badge badge-${getStatusColor(sale.status)}">${sale.status || 'pending'}</span></td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-ghost" onclick="editSale('${sale.id}')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </button>
+                            <button class="btn btn-sm btn-ghost text-danger" onclick="deleteSale('${sale.id}')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getStatusColor(status) {
+            const colors = { paid: 'success', pending: 'warning', cancelled: 'danger' };
+            return colors[status] || 'secondary';
+        }
+
+        window.editSale = (id) => window.location.href = `edit.html?id=${id}`;
+        
+        window.deleteSale = async (id) => {
+            if (!confirm('Delete this sale record?')) return;
+            try {
+                const { error } = await supabase.from('sales').delete().eq('id', id);
+                if (error) throw error;
+                showToast('Sale deleted', 'success');
+                await loadSales();
+            } catch (error) {
+                showToast('Failed to delete sale', 'error');
+            }
+        };
+
+        function setupEventListeners() {
+            document.getElementById('dateFromFilter').addEventListener('change', applyFilters);
+            document.getElementById('dateToFilter').addEventListener('change', applyFilters);
+            document.getElementById('customerFilter').addEventListener('change', applyFilters);
+            document.getElementById('statusFilter').addEventListener('change', applyFilters);
+
+            document.getElementById('exportBtn').addEventListener('click', () => {
+                const exportData = filteredSales.map(s => ({
+                    Date: s.sale_date,
+                    Customer: s.customer_name || '',
+                    Product: s.product_name || '',
+                    Quantity: s.quantity || '',
+                    Unit: s.unit || '',
+                    'Unit Price': s.unit_price || '',
+                    Total: s.total_amount || '',
+                    Status: s.status || ''
+                }));
+                downloadCSV(exportData, 'sales.csv');
+            });
+        }
+
+        init();
+    </script>
+    <script src="../../js/user-menu.js"></script>
+    <script type="module" src="../../js/app.js"></script>
+</body>
+</html>

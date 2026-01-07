@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings - Blaze Dairy Management</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/pages/settings.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/>
+                </svg>
+                <span class="brand-name">Blaze Dairy</span>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="nav-menu" id="navMenu">
+                <a href="../../index.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    Dashboard
+                </a>
+                <a href="../animals/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.84 4.84l-4.24 4.24M23 12h-6m-6 0H1"/></svg>
+                    Livestock
+                </a>
+                <a href="../production/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 7h20M2 17h20"/></svg>
+                    Production
+                </a>
+                <a href="../feed/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 3h-8v4h8V3z"/></svg>
+                    Feed
+                </a>
+                <a href="../health/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    Health
+                </a>
+                <a href="../sales/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    Sales
+                </a>
+                <a href="../expenses/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Expenses
+                </a>
+                <a href="../inventory/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    Inventory
+                </a>
+                <a href="../tasks/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    Tasks
+                </a>
+            </div>
+            <div class="nav-user">
+                <button class="user-menu-btn" id="userMenuBtn">
+                    <span class="user-avatar" id="userAvatar">A</span>
+                    <span class="user-name" id="userName">Admin</span>
+                </button>
+                <div class="user-menu" id="userMenu">
+                    <a href="profile.html" class="user-menu-item">Profile</a>
+                    <a href="settings.html" class="user-menu-item">Settings</a>
+                    <hr class="menu-divider">
+                    <button class="user-menu-item" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container settings-container">
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">Profile Settings</h1>
+                    <p class="page-subtitle">Manage your personal information and password</p>
+                </div>
+            </header>
+
+            <div class="alerts-container" id="alertsContainer"></div>
+
+            <!-- User Info Display -->
+            <div class="user-info-display">
+                <div class="user-avatar-large" id="profileAvatar">A</div>
+                <div class="user-info-text">
+                    <h2 class="user-info-name" id="currentFullName">Loading...</h2>
+                    <div class="user-info-meta">
+                        <div class="user-info-meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            <span id="currentEmail">Loading...</span>
+                        </div>
+                        <span class="badge-role" id="currentRoleBadge">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-content">
+                <!-- Profile Information Card -->
+                <div class="settings-card">
+                    <div class="settings-card-header">
+                        <h3 class="settings-card-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            Personal Information
+                        </h3>
+                        <p class="settings-card-subtitle">Update your account details and contact information</p>
+                    </div>
+                    <div class="settings-card-body">
+                        <form id="profileForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="fullName" class="form-label">Full Name *</label>
+                                    <input type="text" id="fullName" class="form-input" required placeholder="Enter your full name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email" class="form-label">Email Address *</label>
+                                    <input type="email" id="email" class="form-input" required placeholder="Enter your email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone" class="form-label">Phone Number</label>
+                                    <input type="tel" id="phone" class="form-input" placeholder="Enter your phone number (optional)">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary" id="updateProfileBtn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                                    Update Profile
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Change Password Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Change Password</h3>
+                        <p class="card-subtitle">Ensure your account is using a strong password</p>
+                    </div>
+                    <div class="card-body">
+                        <form id="passwordForm">
+                            <div class="form-grid">
+                                <div class="form-group" style="grid-column: 1 / -1;">
+                                    <label for="currentPassword" class="form-label">Current Password *</label>
+                                    <input type="password" id="currentPassword" class="form-input" required placeholder="Enter current password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="newPassword" class="form-label">New Password *</label>
+                                    <input type="password" id="newPassword" class="form-input" required placeholder="Enter new password" minlength="6">
+                                    <small style="color: var(--text-secondary); font-size: 0.875rem;">Minimum 6 characters</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmPassword" class="form-label">Confirm New Password *</label>
+                                    <input type="password" id="confirmPassword" class="form-input" required placeholder="Confirm new password" minlength="6">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary" id="changePasswordBtn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                                    Change Password
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../../js/user-menu.js"></script>
+    <script type="module">
+        import supabase from '../../js/supabase-client.js';
+        import { requireAuth, getCurrentUser, updatePassword } from '../../js/auth.js';
+        import { showToast, showAlert } from '../../js/utils.js';
+
+        let currentUser = null;
+
+        // Initialize
+        async function init() {
+            await requireAuth();
+            await loadUserProfile();
+            setupEventListeners();
+        }
+
+        // Load user profile
+        async function loadUserProfile() {
+            try {
+                currentUser = await getCurrentUser();
+                
+                if (!currentUser) {
+                    showToast('Failed to load user profile', 'danger');
+                    return;
+                }
+
+                // Update current info display
+                document.getElementById('currentFullName').textContent = currentUser.full_name || 'No name set';
+                document.getElementById('currentEmail').textContent = currentUser.email;
+                
+                const avatar = currentUser.full_name ? currentUser.full_name.charAt(0).toUpperCase() : 'U';
+                document.getElementById('profileAvatar').textContent = avatar;
+                document.getElementById('userAvatar').textContent = avatar;
+                document.getElementById('userName').textContent = currentUser.full_name || 'User';
+
+                // Set role badge
+                const roleBadge = document.getElementById('currentRoleBadge');
+                const role = currentUser.role || 'staff';
+                roleBadge.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+                roleBadge.className = `badge badge-${role === 'admin' ? 'success' : 'info'}`;
+
+                // Populate form
+                document.getElementById('fullName').value = currentUser.full_name || '';
+                document.getElementById('email').value = currentUser.email || '';
+                document.getElementById('phone').value = currentUser.phone || '';
+
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showToast('Failed to load profile', 'danger');
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Profile form submission
+            document.getElementById('profileForm').addEventListener('submit', handleProfileUpdate);
+
+            // Password form submission
+            document.getElementById('passwordForm').addEventListener('submit', handlePasswordChange);
+
+            // User menu
+            document.getElementById('userMenuBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.getElementById('userMenu').classList.toggle('show');
+            });
+
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                try {
+                    const { signOut } = await import('../../js/auth.js');
+                    await signOut();
+                } catch (error) {
+                    showToast('Logout failed', 'danger');
+                }
+            });
+
+            // Mobile menu
+            document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {
+                document.getElementById('navMenu').classList.toggle('show');
+            });
+
+            // Close menus on outside click
+            document.addEventListener('click', () => {
+                document.getElementById('userMenu').classList.remove('show');
+            });
+        }
+
+        // Handle profile update
+        async function handleProfileUpdate(e) {
+            e.preventDefault();
+
+            const updateBtn = document.getElementById('updateProfileBtn');
+            const originalText = updateBtn.innerHTML;
+            
+            try {
+                updateBtn.disabled = true;
+                updateBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Updating...';
+
+                const fullName = document.getElementById('fullName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+
+                // Update users table
+                const { error: updateError } = await supabase
+                    .from('users')
+                    .update({
+                        full_name: fullName,
+                        email: email,
+                        phone: phone || null,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', currentUser.id);
+
+                if (updateError) throw updateError;
+
+                // Update auth email if changed
+                if (email !== currentUser.email) {
+                    const { error: emailError } = await supabase.auth.updateUser({
+                        email: email
+                    });
+
+                    if (emailError) {
+                        showToast('Profile updated but email change requires verification', 'warning');
+                    } else {
+                        showToast('Profile updated! Check your email to verify the new address.', 'success');
+                    }
+                } else {
+                    showToast('Profile updated successfully!', 'success');
+                }
+
+                // Reload profile
+                await loadUserProfile();
+
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showToast(error.message || 'Failed to update profile', 'danger');
+            } finally {
+                updateBtn.disabled = false;
+                updateBtn.innerHTML = originalText;
+            }
+        }
+
+        // Handle password change
+        async function handlePasswordChange(e) {
+            e.preventDefault();
+
+            const changeBtn = document.getElementById('changePasswordBtn');
+            const originalText = changeBtn.innerHTML;
+
+            try {
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                // Validate passwords
+                if (newPassword !== confirmPassword) {
+                    showToast('New passwords do not match', 'danger');
+                    return;
+                }
+
+                if (newPassword.length < 6) {
+                    showToast('Password must be at least 6 characters', 'danger');
+                    return;
+                }
+
+                changeBtn.disabled = true;
+                changeBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Changing...';
+
+                // Verify current password by attempting to sign in
+                const { error: signInError } = await supabase.auth.signInWithPassword({
+                    email: currentUser.email,
+                    password: currentPassword
+                });
+
+                if (signInError) {
+                    showToast('Current password is incorrect', 'danger');
+                    return;
+                }
+
+                // Update password
+                await updatePassword(newPassword);
+
+                showToast('Password changed successfully!', 'success');
+                
+                // Clear form
+                document.getElementById('passwordForm').reset();
+
+            } catch (error) {
+                console.error('Error changing password:', error);
+                showToast(error.message || 'Failed to change password', 'danger');
+            } finally {
+                changeBtn.disabled = false;
+                changeBtn.innerHTML = originalText;
+            }
+        }
+
+        // Initialize app
+        init();
+    </script>
+
+    <style>
+        .spin {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .form-actions {
+            margin-top: var(--spacing-lg);
+            display: flex;
+            gap: var(--spacing-md);
+        }
+    </style>
+</body>
+</html>

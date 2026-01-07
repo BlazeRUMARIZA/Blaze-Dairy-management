@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milk Production - Blaze Dairy Management</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/pages/stats.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/></svg>
+                <span class="brand-name">Blaze Dairy</span>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="nav-menu" id="navMenu">
+                <a href="../../index.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    Dashboard
+                </a>
+                <a href="../animals/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.84 4.84l-4.24 4.24M23 12h-6m-6 0H1"/></svg>
+                    Livestock
+                </a>
+                <a href="list.html" class="nav-link active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 7h20M2 17h20"/></svg>
+                    Production
+                </a>
+                <a href="../feed/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 3h-8v4h8V3z"/></svg>
+                    Feed
+                </a>
+                <a href="../health/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    Health
+                </a>
+                <a href="../sales/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    Sales
+                </a>
+                <a href="../expenses/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Expenses
+                </a>
+                <a href="../inventory/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    Inventory
+                </a>
+                <a href="../tasks/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    Tasks
+                </a>
+            </div>
+            <div class="nav-user">
+                <button class="user-menu-btn" id="userMenuBtn">
+                    <span class="user-avatar" id="userAvatar">A</span>
+                    <span class="user-name" id="userName">Admin</span>
+                </button>
+                <div class="user-menu" id="userMenu">
+                    <a href="../settings/profile.html" class="user-menu-item">Profile</a>
+                    <a href="../settings/settings.html" class="user-menu-item">Settings</a>
+                    <hr class="menu-divider">
+                    <button class="user-menu-item" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">Milk Production</h1>
+                    <p class="page-subtitle">Track daily milk production records</p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-secondary" id="exportBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-5l5-5m0 0l5 5m-5-5v12"/></svg>
+                        Export
+                    </button>
+                    <a href="add.html" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7h14"/></svg>
+                        Record Production
+                    </a>
+                </div>
+            </header>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--spacing-lg); margin-bottom: var(--spacing-xl);">
+                <div class="stat-card">
+                    <div class="stat-label">Today's Production</div>
+                    <div class="stat-value" id="todayProduction">0 L</div>
+                    <div class="stat-change positive" id="todayChange">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">This Week</div>
+                    <div class="stat-value" id="weekProduction">0 L</div>
+                    <div class="stat-change" id="weekChange">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg per Animal</div>
+                    <div class="stat-value" id="avgPerAnimal">0 L</div>
+                    <div class="stat-change" id="avgChange">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Quality Score</div>
+                    <div class="stat-value" id="qualityScore">--</div>
+                    <div class="stat-change positive" id="qualityChange">--</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card" style="margin-bottom: var(--spacing-lg);">
+                <div class="card-body">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md); align-items: end;">
+                        <div class="form-group" style="margin: 0;">
+                            <label class="form-label">Search</label>
+                            <input type="text" id="searchInput" class="form-input" placeholder="Search by tag, animal...">
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label class="form-label">Date From</label>
+                            <input type="date" id="dateFromFilter" class="form-input">
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label class="form-label">Date To</label>
+                            <input type="date" id="dateToFilter" class="form-input">
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label class="form-label">Shift</label>
+                            <select id="shiftFilter" class="form-select">
+                                <option value="">All Shifts</option>
+                                <option value="morning">Morning</option>
+                                <option value="evening">Evening</option>
+                                <option value="night">Night</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label class="form-label">Animal</label>
+                            <select id="animalFilter" class="form-select">
+                                <option value="">All Animals</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Records Table -->
+            <div class="card">
+                <div class="card-body">
+                    <div id="loadingState" class="loading-state">
+                        <div class="spinner"></div>
+                        <p>Loading production records...</p>
+                    </div>
+
+                    <div id="emptyState" class="empty-state" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M2 7h20M2 17h20"/>
+                        </svg>
+                        <h3>No production records yet</h3>
+                        <p>Start recording your daily milk production</p>
+                        <a href="add.html" class="btn btn-primary" style="margin-top: var(--spacing-md);">Record Production</a>
+                    </div>
+
+                    <div id="tableContainer" style="display: none;">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Animal</th>
+                                        <th>Shift</th>
+                                        <th>Quantity (L)</th>
+                                        <th>Fat %</th>
+                                        <th>SNF %</th>
+                                        <th>Quality</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recordsTableBody"></tbody>
+                            </table>
+                        </div>
+                        <div id="paginationContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { supabase } from '../../js/supabase-client.js';
+        import { requireAuth } from '../../js/auth.js';
+        import { formatDate, formatNumber, showToast, downloadCSV, debounce } from '../../js/utils.js';
+        import { Pagination } from '../../js/app.js';
+
+        await requireAuth();
+
+        let allRecords = [];
+        let filteredRecords = [];
+        let animals = [];
+        const itemsPerPage = 15;
+        let pagination;
+
+        async function init() {
+            await Promise.all([loadAnimals(), loadRecords()]);
+            setupEventListeners();
+        }
+
+        async function loadAnimals() {
+            try {
+                const { data, error } = await supabase
+                    .from('animals')
+                    .select('id, tag, name')
+                    .eq('status', 'active')
+                    .order('tag');
+
+                if (error) throw error;
+                
+                animals = data || [];
+                
+                const animalFilter = document.getElementById('animalFilter');
+                animals.forEach(animal => {
+                    const option = document.createElement('option');
+                    option.value = animal.id;
+                    option.textContent = `${animal.tag}${animal.name ? ' - ' + animal.name : ''}`;
+                    animalFilter.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading animals:', error);
+            }
+        }
+
+        async function loadRecords() {
+            try {
+                document.getElementById('loadingState').style.display = 'flex';
+                document.getElementById('emptyState').style.display = 'none';
+                document.getElementById('tableContainer').style.display = 'none';
+
+                const { data, error } = await supabase
+                    .from('milk_productions')
+                    .select(`
+                        *,
+                        animals (tag, name)
+                    `)
+                    .order('production_date', { ascending: false })
+                    .order('shift', { ascending: false });
+
+                if (error) throw error;
+
+                allRecords = data || [];
+                await updateStats();
+                applyFilters();
+
+            } catch (error) {
+                console.error('Error loading records:', error);
+                showToast('Failed to load production records', 'error');
+            } finally {
+                document.getElementById('loadingState').style.display = 'none';
+            }
+        }
+
+        async function updateStats() {
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+                // Today's production
+                const todayRecords = allRecords.filter(r => r.production_date === today);
+                const todayTotal = todayRecords.reduce((sum, r) => sum + parseFloat(r.quantity || 0), 0);
+                document.getElementById('todayProduction').textContent = formatNumber(todayTotal, 1) + ' L';
+
+                // Week's production
+                const weekRecords = allRecords.filter(r => r.production_date >= weekAgo);
+                const weekTotal = weekRecords.reduce((sum, r) => sum + parseFloat(r.quantity || 0), 0);
+                document.getElementById('weekProduction').textContent = formatNumber(weekTotal, 1) + ' L';
+
+                // Average per animal
+                const activeAnimals = animals.length;
+                const avgPerAnimal = activeAnimals > 0 ? todayTotal / activeAnimals : 0;
+                document.getElementById('avgPerAnimal').textContent = formatNumber(avgPerAnimal, 1) + ' L';
+
+                // Quality score (average of fat + snf)
+                if (todayRecords.length > 0) {
+                    const avgFat = todayRecords.reduce((sum, r) => sum + (r.fat_percentage || 0), 0) / todayRecords.length;
+                    const avgSnf = todayRecords.reduce((sum, r) => sum + (r.snf_percentage || 0), 0) / todayRecords.length;
+                    document.getElementById('qualityScore').textContent = formatNumber((avgFat + avgSnf) / 2, 1) + '%';
+                } else {
+                    document.getElementById('qualityScore').textContent = '--';
+                }
+
+            } catch (error) {
+                console.error('Error updating stats:', error);
+            }
+        }
+
+        function applyFilters() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const dateFrom = document.getElementById('dateFromFilter').value;
+            const dateTo = document.getElementById('dateToFilter').value;
+            const shift = document.getElementById('shiftFilter').value;
+            const animalId = document.getElementById('animalFilter').value;
+
+            filteredRecords = allRecords.filter(record => {
+                const matchesSearch = !search || 
+                    record.animals?.tag?.toLowerCase().includes(search) ||
+                    record.animals?.name?.toLowerCase().includes(search);
+                
+                const matchesDateFrom = !dateFrom || record.production_date >= dateFrom;
+                const matchesDateTo = !dateTo || record.production_date <= dateTo;
+                const matchesShift = !shift || record.shift === shift;
+                const matchesAnimal = !animalId || record.animal_id === animalId;
+
+                return matchesSearch && matchesDateFrom && matchesDateTo && matchesShift && matchesAnimal;
+            });
+
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('recordsTableBody');
+            
+            if (filteredRecords.length === 0) {
+                document.getElementById('emptyState').style.display = 'flex';
+                document.getElementById('tableContainer').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('tableContainer').style.display = 'block';
+
+            if (!pagination) {
+                pagination = new Pagination(
+                    'paginationContainer',
+                    filteredRecords.length,
+                    itemsPerPage,
+                    renderPage
+                );
+            } else {
+                pagination.updateTotalItems(filteredRecords.length);
+            }
+
+            renderPage(1);
+        }
+
+        function renderPage(page) {
+            const tbody = document.getElementById('recordsTableBody');
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageRecords = filteredRecords.slice(start, end);
+
+            tbody.innerHTML = pageRecords.map(record => {
+                const animalDisplay = record.animals 
+                    ? `${record.animals.tag}${record.animals.name ? ' - ' + record.animals.name : ''}`
+                    : 'Unknown';
+
+                const qualityBadge = getQualityBadge(record.fat_percentage, record.snf_percentage);
+
+                return `
+                    <tr>
+                        <td>${formatDate(record.production_date)}</td>
+                        <td><strong>${animalDisplay}</strong></td>
+                        <td><span class="badge badge-${getShiftColor(record.shift)}">${record.shift}</span></td>
+                        <td><strong>${formatNumber(record.quantity, 1)} L</strong></td>
+                        <td>${record.fat_percentage ? formatNumber(record.fat_percentage, 1) + '%' : '--'}</td>
+                        <td>${record.snf_percentage ? formatNumber(record.snf_percentage, 1) + '%' : '--'}</td>
+                        <td>${qualityBadge}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-ghost" onclick="editRecord('${record.id}')" title="Edit">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                </button>
+                                <button class="btn btn-sm btn-ghost text-danger" onclick="deleteRecord('${record.id}')" title="Delete">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function getShiftColor(shift) {
+            const colors = {
+                morning: 'warning',
+                evening: 'info',
+                night: 'secondary'
+            };
+            return colors[shift] || 'secondary';
+        }
+
+        function getQualityBadge(fat, snf) {
+            if (!fat || !snf) return '<span class="badge badge-secondary">--</span>';
+            
+            const avg = (fat + snf) / 2;
+            if (avg >= 7) return '<span class="badge badge-success">Excellent</span>';
+            if (avg >= 6) return '<span class="badge badge-info">Good</span>';
+            if (avg >= 5) return '<span class="badge badge-warning">Fair</span>';
+            return '<span class="badge badge-danger">Poor</span>';
+        }
+
+        window.editRecord = function(id) {
+            window.location.href = `edit.html?id=${id}`;
+        };
+
+        window.deleteRecord = async function(id) {
+            if (!confirm('Are you sure you want to delete this production record?')) return;
+
+            try {
+                const { error } = await supabase
+                    .from('milk_productions')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                showToast('Production record deleted successfully', 'success');
+                await loadRecords();
+            } catch (error) {
+                console.error('Error deleting record:', error);
+                showToast('Failed to delete production record', 'error');
+            }
+        };
+
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', debounce(applyFilters, 300));
+            document.getElementById('dateFromFilter').addEventListener('change', applyFilters);
+            document.getElementById('dateToFilter').addEventListener('change', applyFilters);
+            document.getElementById('shiftFilter').addEventListener('change', applyFilters);
+            document.getElementById('animalFilter').addEventListener('change', applyFilters);
+
+            document.getElementById('exportBtn').addEventListener('click', () => {
+                const exportData = filteredRecords.map(r => ({
+                    Date: r.production_date,
+                    Animal: r.animals ? `${r.animals.tag} - ${r.animals.name || ''}` : '',
+                    Shift: r.shift,
+                    'Quantity (L)': r.quantity,
+                    'Fat %': r.fat_percentage || '',
+                    'SNF %': r.snf_percentage || '',
+                    Notes: r.notes || ''
+                }));
+                downloadCSV(exportData, 'milk-production.csv');
+            });
+        }
+
+        init();
+    </script>
+    <script src="../../js/user-menu.js"></script>
+    <script type="module" src="../../js/app.js"></script>
+</body>
+</html>

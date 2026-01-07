@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Blaze Dairy Management</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .auth-container {
+            width: 100%;
+            max-width: 420px;
+            padding: var(--spacing-md);
+        }
+        .auth-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-2xl);
+            box-shadow: var(--shadow-xl);
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        .auth-logo {
+            width: 4rem;
+            height: 4rem;
+            background: var(--primary);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-md);
+        }
+        .auth-logo svg {
+            width: 2.5rem;
+            height: 2.5rem;
+            color: white;
+        }
+        .auth-title {
+            font-size: 1.75rem;
+            margin-bottom: var(--spacing-xs);
+        }
+        .auth-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        .auth-footer {
+            text-align: center;
+            margin-top: var(--spacing-lg);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        .auth-footer a {
+            color: var(--primary);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                    </svg>
+                </div>
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Sign in to your account to continue</p>
+            </div>
+
+            <div id="alertContainer"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email" class="form-label form-label-required">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        class="form-input" 
+                        placeholder="you@example.com"
+                        required
+                        autocomplete="email"
+                    >
+                    <span class="form-error" style="display: none;"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label form-label-required">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        class="form-input" 
+                        placeholder="Enter your password"
+                        required
+                        autocomplete="current-password"
+                    >
+                    <span class="form-error" style="display: none;"></span>
+                </div>
+
+                <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                    <label class="form-checkbox">
+                        <input type="checkbox" id="remember">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="forgot-password.html" class="text-primary" style="font-size: 0.875rem;">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;" id="loginBtn">
+                    <span>Sign In</span>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                Don't have an account? <a href="signup.html">Sign up</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { signIn } from '../../js/auth.js';
+        import { showToast, isValidEmail } from '../../js/utils.js';
+
+        const form = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const alertContainer = document.getElementById('alertContainer');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Clear previous errors
+            alertContainer.innerHTML = '';
+            
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            
+            // Validation
+            if (!email || !password) {
+                showAlert('Please fill in all fields', 'danger');
+                return;
+            }
+            
+            if (!isValidEmail(email)) {
+                showAlert('Please enter a valid email address', 'danger');
+                return;
+            }
+            
+            // Disable button and show loading
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<div class="spinner spinner-sm"></div><span>Signing in...</span>';
+            
+            try {
+                await signIn(email, password);
+                
+                // Check for redirect URL
+                const redirectUrl = sessionStorage.getItem('redirectAfterLogin') || '/index.html';
+                sessionStorage.removeItem('redirectAfterLogin');
+                
+                showToast('Login successful!', 'success');
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 500);
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                showAlert(error.message || 'Invalid email or password', 'danger');
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<span>Sign In</span>';
+            }
+        });
+
+        function showAlert(message, type) {
+            alertContainer.innerHTML = `
+                <div class="alert alert-${type}" style="margin-bottom: var(--spacing-md);">
+                    <div style="flex: 1;">${message}</div>
+                </div>
+            `;
+        }
+
+        // Check if already logged in
+        import supabase from '../../js/supabase-client.js';
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+            window.location.href = '/index.html';
+        }
+    </script>
+</body>
+</html>

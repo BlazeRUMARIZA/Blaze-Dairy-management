@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Sale - Blaze Dairy Management</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/></svg>
+                <span class="brand-name">Blaze Dairy</span>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="nav-menu" id="navMenu">
+                <a href="../../index.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    Dashboard
+                </a>
+                <a href="../animals/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.84 4.84l-4.24 4.24M23 12h-6m-6 0H1"/></svg>
+                    Livestock
+                </a>
+                <a href="../production/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 7h20M2 17h20"/></svg>
+                    Production
+                </a>
+                <a href="../feed/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 3h-8v4h8V3z"/></svg>
+                    Feed
+                </a>
+                <a href="../health/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    Health
+                </a>
+                <a href="list.html" class="nav-link active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    Sales
+                </a>
+                <a href="../expenses/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Expenses
+                </a>
+                <a href="../inventory/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    Inventory
+                </a>
+                <a href="../tasks/list.html" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    Tasks
+                </a>
+            </div>
+            <div class="nav-user">
+                <button class="user-menu-btn" id="userMenuBtn">
+                    <span class="user-avatar" id="userAvatar">A</span>
+                    <span class="user-name" id="userName">Admin</span>
+                </button>
+                <div class="user-menu" id="userMenu">
+                    <a href="../settings/profile.html" class="user-menu-item">Profile</a>
+                    <a href="../settings/settings.html" class="user-menu-item">Settings</a>
+                    <hr class="menu-divider">
+                    <button class="user-menu-item" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container" style="max-width: 800px;">
+            <div id="loadingState" class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading sale details...</p>
+            </div>
+
+            <div id="contentContainer" style="display: none;">
+                <header class="page-header">
+                    <div>
+                        <h1 class="page-title">Edit Sale</h1>
+                        <p class="page-subtitle">Update sale transaction details</p>
+                    </div>
+                </header>
+
+                <div class="card">
+                    <div class="card-body">
+                        <form id="saleForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="sale_date" class="form-label form-label-required">Sale Date</label>
+                                    <input type="date" id="sale_date" class="form-input" required>
+                                    <span class="form-error"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="customer_id" class="form-label form-label-required">Customer</label>
+                                    <select id="customer_id" class="form-select" required>
+                                        <option value="">Select Customer</option>
+                                    </select>
+                                    <span class="form-error"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="product_name" class="form-label form-label-required">Product Name</label>
+                                <input type="text" id="product_name" class="form-input" required placeholder="e.g., Fresh Milk, Cheese, Yogurt">
+                                <span class="form-error"></span>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="quantity" class="form-label form-label-required">Quantity</label>
+                                    <input type="number" id="quantity" class="form-input" step="0.01" min="0.01" required placeholder="0.00">
+                                    <span class="form-error"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="unit_price" class="form-label form-label-required">Unit Price</label>
+                                    <input type="number" id="unit_price" class="form-input" step="0.01" min="0.01" required placeholder="0.00">
+                                    <span class="form-error"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="total" class="form-label">Total</label>
+                                <input type="number" id="total" class="form-input" step="0.01" readonly placeholder="0.00">
+                                <span class="form-error"></span>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="status" class="form-label">Status</label>
+                                    <select id="status" class="form-select">
+                                        <option value="pending">Pending</option>
+                                        <option value="paid">Paid</option>
+                                        <option value="cancelled">Cancelled</option>
+                                    </select>
+                                    <span class="form-error"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="payment_method" class="form-label">Payment Method</label>
+                                    <select id="payment_method" class="form-select">
+                                        <option value="">Select Payment Method</option>
+                                        <option value="cash">Cash</option>
+                                        <option value="check">Check</option>
+                                        <option value="bank_transfer">Bank Transfer</option>
+                                        <option value="mobile_money">Mobile Money</option>
+                                    </select>
+                                    <span class="form-error"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="notes" class="form-label">Notes</label>
+                                <textarea id="notes" class="form-textarea" rows="3" placeholder="Any additional notes..."></textarea>
+                                <span class="form-error"></span>
+                            </div>
+
+                            <div class="form-actions">
+                                <a href="list.html" class="btn btn-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-primary" id="submitBtn">
+                                    <span>Update Sale</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { supabase } from '../../js/supabase-client.js';
+        import { requireAuth, getCurrentUser } from '../../js/auth.js';
+        import { showToast } from '../../js/utils.js';
+
+        await requireAuth();
+
+        let saleId;
+
+        async function init() {
+            // Get sale ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            saleId = urlParams.get('id');
+
+            if (!saleId) {
+                showToast('Sale ID not provided', 'error');
+                setTimeout(() => {
+                    window.location.href = 'list.html';
+                }, 1500);
+                return;
+            }
+
+            await Promise.all([loadCustomers(), loadSale()]);
+            setupForm();
+        }
+
+        async function loadCustomers() {
+            try {
+                const { data, error } = await supabase
+                    .from('customers')
+                    .select('id, name')
+                    .order('name');
+
+                if (error) throw error;
+
+                const select = document.getElementById('customer_id');
+                (data || []).forEach(customer => {
+                    const option = document.createElement('option');
+                    option.value = customer.id;
+                    option.textContent = customer.name;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading customers:', error);
+                showToast('Failed to load customers', 'error');
+            }
+        }
+
+        async function loadSale() {
+            try {
+                const { data, error } = await supabase
+                    .from('sales')
+                    .select('*')
+                    .eq('id', saleId)
+                    .single();
+
+                if (error) throw error;
+
+                if (!data) {
+                    showToast('Sale not found', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'list.html';
+                    }, 1500);
+                    return;
+                }
+
+                // Populate form
+                document.getElementById('sale_date').value = data.sale_date || '';
+                document.getElementById('customer_id').value = data.customer_id || '';
+                document.getElementById('product_name').value = data.product_name || '';
+                document.getElementById('quantity').value = data.quantity || 0;
+                document.getElementById('unit_price').value = data.unit_price || 0;
+                document.getElementById('total').value = data.total || 0;
+                document.getElementById('status').value = data.status || 'pending';
+                document.getElementById('payment_method').value = data.payment_method || '';
+                document.getElementById('notes').value = data.notes || '';
+
+                // Show content
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('contentContainer').style.display = 'block';
+
+            } catch (error) {
+                console.error('Error loading sale:', error);
+                showToast('Failed to load sale details', 'error');
+                setTimeout(() => {
+                    window.location.href = 'list.html';
+                }, 1500);
+            }
+        }
+
+        function calculateTotal() {
+            const quantity = parseFloat(document.getElementById('quantity').value) || 0;
+            const unitPrice = parseFloat(document.getElementById('unit_price').value) || 0;
+            const total = quantity * unitPrice;
+            document.getElementById('total').value = total.toFixed(2);
+        }
+
+        function setupForm() {
+            const form = document.getElementById('saleForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const quantityInput = document.getElementById('quantity');
+            const unitPriceInput = document.getElementById('unit_price');
+
+            // Auto-calculate total when quantity or unit price changes
+            quantityInput.addEventListener('input', calculateTotal);
+            unitPriceInput.addEventListener('input', calculateTotal);
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                // Get form data
+                const formData = {
+                    sale_date: document.getElementById('sale_date').value,
+                    customer_id: document.getElementById('customer_id').value,
+                    product_name: document.getElementById('product_name').value.trim(),
+                    quantity: parseFloat(document.getElementById('quantity').value),
+                    unit_price: parseFloat(document.getElementById('unit_price').value),
+                    total: parseFloat(document.getElementById('total').value),
+                    status: document.getElementById('status').value,
+                    payment_method: document.getElementById('payment_method').value || null,
+                    notes: document.getElementById('notes').value.trim() || null
+                };
+
+                // Validation
+                if (!formData.sale_date) {
+                    showToast('Sale date is required', 'error');
+                    return;
+                }
+
+                if (!formData.customer_id) {
+                    showToast('Customer is required', 'error');
+                    return;
+                }
+
+                if (!formData.product_name) {
+                    showToast('Product name is required', 'error');
+                    return;
+                }
+
+                if (!formData.quantity || formData.quantity <= 0) {
+                    showToast('Quantity must be greater than 0', 'error');
+                    return;
+                }
+
+                if (!formData.unit_price || formData.unit_price <= 0) {
+                    showToast('Unit price must be greater than 0', 'error');
+                    return;
+                }
+
+                // Disable button
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<div class="spinner spinner-sm"></div><span>Updating...</span>';
+
+                try {
+                    const user = await getCurrentUser();
+                    formData.updated_by = user.id;
+                    formData.updated_at = new Date().toISOString();
+
+                    const { error } = await supabase
+                        .from('sales')
+                        .update(formData)
+                        .eq('id', saleId);
+
+                    if (error) throw error;
+
+                    showToast('Sale updated successfully', 'success');
+                    
+                    // Redirect after short delay
+                    setTimeout(() => {
+                        window.location.href = 'list.html';
+                    }, 1000);
+
+                } catch (error) {
+                    console.error('Error updating sale:', error);
+                    showToast(error.message || 'Failed to update sale', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span>Update Sale</span>';
+                }
+            });
+        }
+
+        init();
+    </script>
+    <script src="../../js/user-menu.js"></script>
+    <script type="module" src="../../js/app.js"></script>
+</body>
+</html>
