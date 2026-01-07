@@ -74,6 +74,9 @@
                     <a href="../settings/profile.html" class="user-menu-item">Profile</a>
                     <a href="../settings/settings.html" class="user-menu-item">Settings</a>
                     <hr class="menu-divider">
+                    <a href="../customers/list.html" class="user-menu-item">Customers</a>
+                    <a href="../users/list.html" class="user-menu-item">Users</a>
+                    <hr class="menu-divider">
                     <button class="user-menu-item" id="logoutBtn">Logout</button>
                 </div>
             </div>
@@ -279,12 +282,12 @@
 
                 // Today's production
                 const todayRecords = allRecords.filter(r => r.production_date === today);
-                const todayTotal = todayRecords.reduce((sum, r) => sum + parseFloat(r.quantity || 0), 0);
+                const todayTotal = todayRecords.reduce((sum, r) => sum + parseFloat(r.volume_liters || 0), 0);
                 document.getElementById('todayProduction').textContent = formatNumber(todayTotal, 1) + ' L';
 
                 // Week's production
                 const weekRecords = allRecords.filter(r => r.production_date >= weekAgo);
-                const weekTotal = weekRecords.reduce((sum, r) => sum + parseFloat(r.quantity || 0), 0);
+                const weekTotal = weekRecords.reduce((sum, r) => sum + parseFloat(r.volume_liters || 0), 0);
                 document.getElementById('weekProduction').textContent = formatNumber(weekTotal, 1) + ' L';
 
                 // Average per animal
@@ -458,7 +461,7 @@
                     Date: r.production_date,
                     Animal: r.animals ? `${r.animals.tag_id} - ${r.animals.name || ''}` : '',
                     Shift: r.shift,
-                    'Quantity (L)': r.quantity,
+                    'Quantity (L)': r.volume_liters,
                     'Fat %': r.fat_percentage || '',
                     'SNF %': r.snf_percentage || '',
                     Notes: r.notes || ''

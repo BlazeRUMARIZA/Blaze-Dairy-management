@@ -73,6 +73,9 @@
                     <a href="../settings/profile.html" class="user-menu-item">Profile</a>
                     <a href="../settings/settings.html" class="user-menu-item">Settings</a>
                     <hr class="menu-divider">
+                    <a href="../customers/list.html" class="user-menu-item">Customers</a>
+                    <a href="../users/list.html" class="user-menu-item">Users</a>
+                    <hr class="menu-divider">
                     <button class="user-menu-item" id="logoutBtn">Logout</button>
                 </div>
             </div>
@@ -150,18 +153,6 @@
                                     <input type="number" id="temperature" class="form-input" step="0.1">
                                     <span class="form-error"></span>
                                 </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="quality_grade" class="form-label">Quality Grade</label>
-                                <select id="quality_grade" class="form-select">
-                                    <option value="">Select Grade</option>
-                                    <option value="A">Grade A (Premium)</option>
-                                    <option value="B">Grade B (Standard)</option>
-                                    <option value="C">Grade C (Below Standard)</option>
-                                    <option value="rejected">Rejected</option>
-                                </select>
-                                <span class="form-error"></span>
                             </div>
 
                             <div class="form-group">
@@ -247,7 +238,6 @@
                 if (data.fat_percentage) document.getElementById('fat_percentage').value = data.fat_percentage;
                 if (data.snf_percentage) document.getElementById('snf_percentage').value = data.snf_percentage;
                 if (data.temperature_celsius) document.getElementById('temperature').value = data.temperature_celsius;
-                if (data.quality_grade) document.getElementById('quality_grade').value = data.quality_grade;
                 if (data.notes) document.getElementById('notes').value = data.notes;
 
                 document.getElementById('loadingState').style.display = 'none';
@@ -275,7 +265,6 @@
                     fat_percentage: document.getElementById('fat_percentage').value ? parseFloat(document.getElementById('fat_percentage').value) : null,
                     snf_percentage: document.getElementById('snf_percentage').value ? parseFloat(document.getElementById('snf_percentage').value) : null,
                     temperature_celsius: document.getElementById('temperature').value ? parseFloat(document.getElementById('temperature').value) : null,
-                    quality_grade: document.getElementById('quality_grade').value || null,
                     notes: document.getElementById('notes').value.trim() || null
                 };
 

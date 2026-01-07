@@ -332,7 +332,7 @@
 }
 
 .table tbody tr:hover td {
-  color: var(--text-primary
+  color: var(--text-primary)
 }
 
 .table tbody tr:hover {

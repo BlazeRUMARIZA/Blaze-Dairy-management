@@ -69,6 +69,9 @@
                     <a href="../settings/profile.html" class="user-menu-item">Profile</a>
                     <a href="../settings/settings.html" class="user-menu-item">Settings</a>
                     <hr class="menu-divider">
+                    <a href="../customers/list.html" class="user-menu-item">Customers</a>
+                    <a href="../users/list.html" class="user-menu-item">Users</a>
+                    <hr class="menu-divider">
                     <button class="user-menu-item" id="logoutBtn">Logout</button>
                 </div>
             </div>
@@ -225,9 +228,6 @@
                 submitBtn.innerHTML = '<div class="spinner spinner-sm"></div><span>Saving...</span>';
 
                 try {
-                    const user = await getCurrentUser();
-                    formData.created_by = user.id;
-
                     const { error } = await supabase
                         .from('customers')
                         .insert([formData]);
